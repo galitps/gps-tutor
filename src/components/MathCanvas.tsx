@@ -35,7 +35,8 @@ export default function MathCanvas() {
 
     // Load Desmos API script
     const script = document.createElement("script");
-    script.src = "https://www.desmos.com/api/v1.9/calculator.js?apiKey=dcb31709b452b149dc269b578d5367f0";
+    const apiKey = process.env.NEXT_PUBLIC_DESMOS_API_KEY || "dcb31709b452b149dc269b578d5367f0";
+    script.src = `https://www.desmos.com/api/v1.9/calculator.js?apiKey=${apiKey}`;
     script.async = true;
     script.onload = () => initCalculator();
     document.head.appendChild(script);
