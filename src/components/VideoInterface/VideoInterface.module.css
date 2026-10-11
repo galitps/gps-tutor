@@ -1,0 +1,98 @@
+/* VideoInterface.module.css */
+
+/* "flex 
+    flex-col 
+    h-full 
+    bg-slate-900 
+    rounded-xl 
+    overflow-hidden 
+    shadow-lg 
+    border 
+    border-slate-800" */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--bg-surface); /* bg-slate-900 */
+  border-radius: var(--border-radius-lg); /* rounded-xl */
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); /* shadow-lg */
+  border: 1px solid var(--border-color-default); /* border-slate-800 */
+}
+
+/* "relative 
+    bg-slate-800 
+    rounded-lg 
+    overflow-hidden 
+    border 
+    border-slate-700/50 
+    flex 
+    items-center 
+    justify-center" */
+.videoTile {
+  display: flex;
+  position: relative;
+  background-color: var(--bg-card); /* bg-slate-800 */
+  border-radius: var(--border-radius-md); /* rounded-lg */
+  overflow: hidden;
+  border: 1px solid var(--border-color-subtle);
+  align-items: center;
+  justify-content: center;
+}
+
+/* "text-slate-400 
+    text-sm 
+    font-medium" */
+.tileText {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* "h-16 
+    bg-slate-950 
+    border-t 
+    border-slate-800 
+    flex 
+    items-center 
+    justify-center 
+    gap-3 
+    px-4" */
+.controlBar {
+  height: 4rem;
+  background-color: var(--bg-app);
+  border-top: 1px solid var(--border-color-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0 1rem;
+}
+
+.controlBtn {
+  padding: 0.75rem;
+  border-radius: var(--border-radius-full);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+}
+
+.controlBtnActive {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}
+
+.endCallBtn {
+  background-color: var(--color-danger);
+  color: var(--text-primary);
+  margin-left: 1rem;
+}
+
+.endCallBtn:hover {
+  background-color: var(--color-danger-hover);
+}

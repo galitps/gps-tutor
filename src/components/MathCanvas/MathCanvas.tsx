@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import styles from './MathCanvas.module.css';
 
 declare global {
   interface Window {
@@ -47,13 +48,13 @@ export default function MathCanvas() {
   }, []);
 
   return (
-    <div className="relative w-full h-[600px] bg-white rounded-xl shadow-inner border border-slate-200 overflow-hidden">
+    <div className={styles.container}>
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-500 font-medium z-10">
+        <div className={styles.statusOverlay}>
           Loading Desmos Graphing Calculator...
         </div>
       )}
-      <div ref={calculatorRef} className="w-full h-full min-h-[600px]" />
+      <div ref={calculatorRef} className={styles.desmosWrapper} id="calculator" style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }

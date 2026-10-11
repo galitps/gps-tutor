@@ -20,6 +20,29 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Authentication
+
+Sign-in uses Supabase Auth. Configure `NEXT_PUBLIC_SUPABASE_URL` and
+`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `.env.local`, then apply the SQL
+migration in `supabase/migrations/20261010233800_create_profiles.sql` to the
+Supabase project.
+
+The migration creates a `public.profiles` row for each Auth user and assigns
+the `student` role by default (including existing Auth users the first time it
+runs). Profiles are visible only to their owner. To provision a tutor or
+admin, create the account in Supabase Auth and update its role from the
+Supabase SQL Editor:
+
+```sql
+update public.profiles
+set role = 'tutor'
+where id = (select id from auth.users where email = 'tutor@example.com');
+```
+
+Use `admin` instead of `tutor` to provision an administrator. Role selection on
+the sign-in screen is checked against the stored profile role; it does not
+assign or change roles.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

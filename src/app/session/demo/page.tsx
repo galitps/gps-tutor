@@ -1,5 +1,5 @@
-import MathCanvas from "@/components/MathCanvas";
-import VideoInterface from "@/components/VideoInterface";
+import MathCanvas from "@/components/MathCanvas/MathCanvas";
+import VideoInterface from "@/components/VideoInterface/VideoInterface";
 
 export default function SessionPage() {
   return (
@@ -19,12 +19,11 @@ export default function SessionPage() {
 
       {/* Workspace Grid */}
       <main className="flex-1 p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 h-[calc(100vh-3.5rem)] overflow-hidden">
-        {/* Left Column: Interactive Desmos Math Canvas (8 cols) */}
+        {/* Left Column: Interactive Desmos Math Canvas (8 cols)  */}
         <section className="lg:col-span-8 h-full flex flex-col">
           <MathCanvas />
         </section>
-
-        {/* Right Column: Video Controls & Session Notes (4 cols) */}
+        {/* Right Column: Video Controls & Session Notes (4 cols)  */}
         <section className="lg:col-span-4 h-full flex flex-col">
           <VideoInterface />
         </section>

@@ -157,3 +157,4 @@ Back in Vercel, gps-tutor repo comes up, click Import
 Add environment variable NEXT_PUBLIC_DESMOS_API_KEY with the Desmos key
 Click Deploy
 Continue to Dashboard
+
