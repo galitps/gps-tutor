@@ -27,6 +27,20 @@ Sign-in uses Supabase Auth. Configure `NEXT_PUBLIC_SUPABASE_URL` and
 migration in `supabase/migrations/20261010233800_create_profiles.sql` to the
 Supabase project.
 
+To enable Google sign-in:
+
+1. In the Supabase Dashboard, enable Google under **Authentication → Providers**.
+   Create an OAuth client ID and secret in Google Cloud. Add the Supabase
+   provider callback URL shown in Supabase (usually
+   `https://<project-ref>.supabase.co/auth/v1/callback`) to Google's authorized
+   redirect URIs.
+2. In Supabase **Authentication → URL Configuration**, set the production Site
+   URL and add `https://gps-tutor.vercel.app/auth/callback` to the allowed
+   redirect URLs. Add `http://localhost:3000/auth/callback` for local testing.
+3. Save the Google client ID and secret in the Supabase Google provider
+   settings. The app itself uses the existing Supabase URL and publishable key;
+   Google secrets must not be added to client-side environment variables.
+
 The migration creates a `public.profiles` row for each Auth user and assigns
 the `student` role by default (including existing Auth users the first time it
 runs). Profiles are visible only to their owner. To provision a tutor or
