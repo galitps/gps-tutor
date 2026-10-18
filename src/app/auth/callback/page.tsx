@@ -127,7 +127,7 @@ export default function AuthCallbackPage() {
         {status !== "checking" && (
           <Link
             className="mt-8 inline-flex rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d]"
-            href="/"
+            href={status === "success" ? "/session/demo" : "/"}
           >
             {status === "success" ? "Continue" : "Return to sign in"}
           </Link>

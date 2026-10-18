@@ -1,6 +1,8 @@
+
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { BookOpen, GraduationCap, LockKeyhole } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -201,8 +203,14 @@ export default function Home() {
                   Your {signedInAs} account has been verified.
                 </p>
                 <p className="mt-1 break-all text-sm text-slate-500">{email}</p>
+                <Link
+                  className="mt-8 flex w-full justify-center rounded-xl bg-[#183b60] px-4 py-3 font-semibold text-white transition hover:bg-[#102d4d]"
+                  href="/session/demo"
+                >
+                  Continue to tutoring session
+                </Link>
                 <button
-                  className="mt-8 w-full rounded-xl border border-slate-200 px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
                   disabled={isSubmitting}
                   onClick={handleSignOut}
                   type="button"
