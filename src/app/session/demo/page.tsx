@@ -1,4 +1,5 @@
 import MathCanvas from "@/components/MathCanvas/MathCanvas";
+import { SessionParticipantsProvider } from "@/components/SessionParticipants/SessionParticipants";
 import SessionChat from "@/components/SessionChat/SessionChat";
 import VideoInterface from "@/components/VideoInterface/VideoInterface";
 
@@ -19,19 +20,21 @@ export default function SessionPage() {
       </header>
 
       {/* Workspace Grid */}
-      <main className="flex-1 p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 h-[calc(100vh-3.5rem)] overflow-hidden">
-        {/* Left Column: Interactive Desmos Math Canvas (8 cols)  */}
-        <section className="lg:col-span-8 h-full flex flex-col">
-          <MathCanvas />
-        </section>
-        {/* Right Column: Video Controls & Session Notes (4 cols)  */}
-        <section className="lg:col-span-4 h-full min-h-0 flex flex-col gap-4">
-          <div className="h-48 shrink-0">
-            <VideoInterface />
-          </div>
-          <SessionChat />
-        </section>
-      </main>
+      <SessionParticipantsProvider>
+        <main className="flex-1 p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 h-[calc(100vh-3.5rem)] overflow-hidden">
+          {/* Left Column: Interactive Desmos Math Canvas (8 cols)  */}
+          <section className="lg:col-span-8 h-full flex flex-col">
+            <MathCanvas />
+          </section>
+          {/* Right Column: Video Controls & Session Notes (4 cols)  */}
+          <section className="lg:col-span-4 h-full min-h-0 flex flex-col gap-4">
+            <div className="h-48 shrink-0">
+              <VideoInterface />
+            </div>
+            <SessionChat />
+          </section>
+        </main>
+      </SessionParticipantsProvider>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Send } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { useSessionParticipants } from "@/components/SessionParticipants/SessionParticipants";
 
 type ChatRole = "student" | "tutor";
 type ChatMessage = {
@@ -57,9 +58,7 @@ export default function SessionChat() {
   const [connectionStatus, setConnectionStatus] = useState<
     "checking" | "signed-out" | "connecting" | "connected" | "error"
   >("checking");
-  const [participantEmails, setParticipantEmails] = useState<
-    Record<ChatRole, string | null>
-  >({ student: null, tutor: null });
+  const { participantEmails } = useSessionParticipants();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -110,38 +109,7 @@ export default function SessionChat() {
 
       sessionChannel = supabase
         .channel(`session:${sessionId}`, {
-          config: {
-            private: true,
-            presence: { key: user.id },
-          },
-        })
-        .on("presence", { event: "sync" }, () => {
-          if (!active || !sessionChannel) {
-            return;
-          }
-
-          const presence = sessionChannel.presenceState<{
-            role?: unknown;
-            email?: unknown;
-          }>();
-          const participants: Record<ChatRole, string | null> = {
-            student: null,
-            tutor: null,
-          };
-
-          for (const instances of Object.values(presence)) {
-            for (const instance of instances) {
-              if (
-                typeof instance.role === "string" &&
-                isChatRole(instance.role) &&
-                typeof instance.email === "string" &&
-                instance.email.length > 0
-              ) {
-                participants[instance.role] = instance.email;
-              }
-            }
-          }
-          setParticipantEmails(participants);
+          config: { private: true },
         })
         .on(
           "postgres_changes",
@@ -168,18 +136,6 @@ export default function SessionChat() {
 
         if (status === "SUBSCRIBED") {
           void (async () => {
-            const presenceResult = await sessionChannel?.track({
-              userId: user.id,
-              role: profile.role,
-              email: user.email,
-            });
-            if (!active) {
-              return;
-            }
-            if (presenceResult !== "ok") {
-              throw new Error(`Unable to publish participant presence: ${presenceResult ?? "no response"}`);
-            }
-
             const { data: chatHistory, error: historyError } = await supabase
               .from("session_messages")
               .select("id, sender_id, content, created_at")

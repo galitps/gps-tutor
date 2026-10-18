@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getIceServers } from "@/lib/webrtc/ice-servers";
+import { useSessionParticipants } from "@/components/SessionParticipants/SessionParticipants";
 
 type CallRole = "student" | "tutor";
 type CallStatus =
@@ -144,6 +145,7 @@ export default function VideoInterface() {
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const { setParticipantEmails } = useSessionParticipants();
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -483,6 +485,16 @@ export default function VideoInterface() {
             }
           }
           setParticipants(currentParticipants);
+          setParticipantEmails({
+            student:
+              profile.role === "student"
+                ? user.email ?? null
+                : currentParticipants.student?.email ?? null,
+            tutor:
+              profile.role === "tutor"
+                ? user.email ?? null
+                : currentParticipants.tutor?.email ?? null,
+          });
 
           const otherRole = profile.role === "student" ? "tutor" : "student";
           const peer = currentParticipants[otherRole];
@@ -588,7 +600,7 @@ export default function VideoInterface() {
         });
       }
     };
-  }, [closePeerConnection, stopLocalStream]);
+  }, [closePeerConnection, setParticipantEmails, stopLocalStream]);
 
   async function startCall(): Promise<void> {
     if (isStarting || localStreamRef.current) {
