@@ -71,7 +71,9 @@ Both participants must select **Start call** and allow camera and microphone
 access. Audio and video are sent directly between the two browsers with WebRTC.
 Camera and microphone access requires HTTPS, except on localhost.
 The Desmos graph is shared live between signed-in student and tutor participants.
-Changes made by either participant are synchronized to the other participant.
+To prevent remote updates interrupting expression entry, a participant must take
+edit control before changing the graph. Only one participant can hold the lock;
+the other sees changes live and can take control after it is released.
 Apply `supabase/migrations/20261018191200_add_shared_graph_channel.sql` once to
 authorize graph synchronization over its own Realtime channel.
 Selecting **End call and sign out** stops local camera/microphone tracks, ends the
