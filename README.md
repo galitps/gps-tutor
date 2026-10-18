@@ -78,6 +78,13 @@ can take control unilaterally; if the student is editing, their latest graph
 state is synchronized before control transfers.
 Apply `supabase/migrations/20261018191200_add_shared_graph_channel.sql` once to
 authorize graph synchronization over its own Realtime channel.
+The shared drawing whiteboard includes freehand, line, rectangle, ellipse, and
+arrow tools, eight colors, undo, and clear. Drawing changes synchronize live
+between connected participants. Apply
+`supabase/migrations/20261018194200_add_shared_whiteboard_channel.sql` once to
+authorize whiteboard synchronization. The whiteboard keeps its current drawings
+while a participant remains connected; drawings are not persisted after everyone
+leaves the session.
 Selecting **End call and sign out** stops local camera/microphone tracks, ends the
 call, and returns that user to login. The remaining participant stays in the
 session in a waiting state and can start a new call when the other user returns.
