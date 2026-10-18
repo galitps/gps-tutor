@@ -10,7 +10,7 @@ export default function VideoInterface() {
   return (
     <div className="flex flex-col h-full bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800">
       {/* Video Streams Grid */}
-      <div className="flex-1 p-3 grid grid-rows-2 gap-3 min-h-[300px]">
+      <div className="flex-1 p-3 grid grid-rows-2 gap-3 min-h-0">
         {/* Student Tile */}
         <div className="relative bg-slate-800 rounded-lg overflow-hidden border border-slate-700/50 flex items-center justify-center">
           <span className="text-slate-400 text-sm font-medium">Student Stream (Waiting to connect...)</span>

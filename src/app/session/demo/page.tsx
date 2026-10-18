@@ -1,4 +1,5 @@
 import MathCanvas from "@/components/MathCanvas/MathCanvas";
+import SessionChat from "@/components/SessionChat/SessionChat";
 import VideoInterface from "@/components/VideoInterface/VideoInterface";
 
 export default function SessionPage() {
@@ -24,8 +25,11 @@ export default function SessionPage() {
           <MathCanvas />
         </section>
         {/* Right Column: Video Controls & Session Notes (4 cols)  */}
-        <section className="lg:col-span-4 h-full flex flex-col">
-          <VideoInterface />
+        <section className="lg:col-span-4 h-full min-h-0 flex flex-col gap-4">
+          <div className="min-h-0 flex-1">
+            <VideoInterface />
+          </div>
+          <SessionChat />
         </section>
       </main>
     </div>
