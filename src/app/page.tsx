@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   BookOpen,
-  Compass,
   GraduationCap,
   LockKeyhole,
   ShieldCheck,
@@ -26,6 +25,37 @@ const signInRoles: {
   { value: "tutor", label: "Tutor", Icon: GraduationCap },
   { value: "admin", label: "Admin", Icon: ShieldCheck },
 ];
+
+function CompassRose({ className }: { className: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      viewBox="0 0 64 64"
+    >
+      <circle cx="32" cy="32" r="29" stroke="currentColor" strokeWidth="1.5" />
+      <circle
+        cx="32"
+        cy="32"
+        r="24"
+        stroke="currentColor"
+        strokeOpacity=".35"
+        strokeWidth="1"
+      />
+      <path
+        d="M32 5 37.5 26.5 54 10 37.5 29 59 32 37.5 34.5 54 54 34.5 37.5 32 59 29.5 37.5 10 54 26.5 34.5 5 32 26.5 29.5 10 10 29.5 26.5 32 5Z"
+        fill="currentColor"
+      />
+      <path
+        d="m32 10 3.5 18.5L51 13 35.5 30 55 32l-19.5 2L51 51 34 35.5 32 55l-2-19.5L13 51l15.5-17L9 32l19.5-2L13 13l17 15.5L32 10Z"
+        fill="#93c5fd"
+      />
+      <circle cx="32" cy="32" r="3.5" fill="currentColor" />
+      <circle cx="32" cy="32" r="1.25" fill="#142d4e" />
+    </svg>
+  );
+}
 
 function isUserRole(role: string): role is UserRole {
   return role === "admin" || role === "tutor" || role === "student";
@@ -182,29 +212,26 @@ export default function Home() {
           <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full border border-white/10" />
           <div className="absolute -right-12 -top-12 h-56 w-56 rounded-full border border-white/10" />
           <div className="relative">
-            <div className="mb-12 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
-              <Compass aria-hidden="true" size={26} />
+            <div className="mb-12 flex h-20 w-20 items-center justify-center rounded-3xl bg-white/10 text-white shadow-inner shadow-white/10">
+              <CompassRose className="h-16 w-16" />
             </div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-blue-200">
               GPS Tutor
             </p>
             <h1 className="max-w-sm text-4xl font-semibold leading-tight tracking-tight">
-              A clearer path to learning.
+              We help you reach your goals.
             </h1>
             <p className="mt-5 max-w-sm leading-7 text-blue-100/80">
               Sign in to continue your tutoring journey, wherever it takes you.
             </p>
           </div>
-          <p className="relative text-sm text-blue-100/60">
-            We help you reach your goals
-          </p>
         </section>
 
         <section className="px-6 py-10 sm:px-12 sm:py-14">
           <div className="mx-auto max-w-md">
             <div className="mb-8 lg:hidden">
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#142d4e] text-white">
-                <Compass aria-hidden="true" size={24} />
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#142d4e] text-white shadow-md shadow-blue-950/20">
+                <CompassRose className="h-14 w-14" />
               </div>
               <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#142d4e]">
                 GPS Tutor
