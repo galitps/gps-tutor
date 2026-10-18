@@ -17,7 +17,7 @@ export default function SessionWorkspace({
   const [view, setView] = useState<WorkspaceView>("math");
 
   return (
-    <section className="flex h-full min-h-0 flex-col gap-2">
+    <section className="flex h-full min-h-0 min-w-0 flex-col gap-2">
       <div
         aria-label="Session workspace"
         className="flex shrink-0 items-center gap-1"
@@ -58,7 +58,7 @@ export default function SessionWorkspace({
       </div>
       <div
         aria-labelledby="math-canvas-tab"
-        className={`${view === "math" ? "flex" : "hidden"} min-h-0 flex-1`}
+        className={`${view === "math" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col`}
         id="math-canvas-panel"
         role="tabpanel"
       >
@@ -66,7 +66,7 @@ export default function SessionWorkspace({
       </div>
       <div
         aria-labelledby="whiteboard-tab"
-        className={`${view === "whiteboard" ? "flex" : "hidden"} min-h-0 flex-1`}
+        className={`${view === "whiteboard" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col`}
         id="whiteboard-panel"
         role="tabpanel"
       >

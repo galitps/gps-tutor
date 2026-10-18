@@ -577,7 +577,7 @@ export default function Whiteboard({
 
   return (
     <section
-      className="relative flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-slate-300 bg-white"
+      className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-300 bg-white"
       data-printable="whiteboard"
     >
       <div

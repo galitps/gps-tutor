@@ -167,7 +167,7 @@ export default function SessionPage() {
 
       <SessionParticipantsProvider>
         <main className="grid h-[calc(100vh-3.5rem)] flex-1 grid-cols-1 gap-4 overflow-hidden p-4 lg:grid-cols-12">
-          <section className="flex h-full flex-col lg:col-span-8">
+          <section className="flex h-full min-w-0 flex-col lg:col-span-8">
             <SessionWorkspace sessionId={session.id} sessionRole={session.role} />
           </section>
           <section className="flex h-full min-h-0 flex-col gap-4 lg:col-span-4">
