@@ -65,6 +65,24 @@ assign or change roles. To use two accounts at the same time, sign in from
 separate browser profiles; tabs in the same browser profile share the same
 Supabase session. Alternatively, sign out before switching accounts.
 
+## Session audio and video
+
+Both participants must select **Start call** and allow camera and microphone
+access. Audio and video are sent directly between the two browsers with WebRTC.
+Camera and microphone access requires HTTPS, except on localhost.
+
+The call uses public STUN servers by default. To use custom STUN or TURN servers,
+set `NEXT_PUBLIC_WEBRTC_ICE_SERVERS` to a JSON array in `.env.local`:
+
+```dotenv
+NEXT_PUBLIC_WEBRTC_ICE_SERVERS='[{"urls":"stun:stun.example.com:3478"},{"urls":"turns:turn.example.com:5349","username":"temporary-user","credential":"temporary-credential"}]'
+```
+
+This configuration is included in the browser bundle. Do not put long-lived
+TURN credentials in it; use temporary credentials from your TURN provider.
+Public STUN fallback can fail on restrictive networks, where a TURN relay is
+needed.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
