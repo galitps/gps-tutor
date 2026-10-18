@@ -48,22 +48,36 @@ email migration adds the Auth email to each profile, restores missing profile
 rows as students, and keeps the profile email in sync if the Auth email changes.
 If the session-messages migration has already been applied, do not run it again
 when applying the profile email migration.
-Profiles are visible only to their owner in the app. Do not delete profile rows
-to change a role: the Auth account remains, but its profile will be missing
-until it is restored. To provision a tutor or admin, create the account in
-Supabase Auth and update its role from the Supabase SQL Editor:
+To provision a tutor or admin, create the account in Supabase Auth and update
+its role from the Supabase SQL Editor. Profiles cannot be deleted to change
+roles: that leaves the Auth account without its required profile.
 
 ```sql
 update public.profiles
-set role = 'tutor'
+set role = 'tutor', is_tutor = true
 where email = 'tutor@example.com';
 ```
 
-Use `admin` instead of `tutor` to provision an administrator. Role selection on
-the sign-in screen is checked against the stored profile role; it does not
-assign or change roles. To use two accounts at the same time, sign in from
-separate browser profiles; tabs in the same browser profile share the same
-Supabase session. Alternatively, sign out before switching accounts.
+Set `role = 'admin', is_tutor = true` to provision an administrator who may
+also be assigned tutoring sections. Admin login opens the separate
+course-management screen and cannot enter tutoring sessions. To tutor using
+the same account, sign out and sign in again using the Tutor account type.
+Admin accounts cannot be assigned as students. Role selection on the sign-in
+screen is checked against the stored profile role; it does not assign or change
+roles.
+
+After applying `supabase/migrations/20261018201500_add_course_management.sql`,
+administrators can create courses, assign courses to students, and assign
+tutors to each student/course section. A student has at most one section for a
+given course; each section has its own chat history and live collaboration
+channels. Students and tutors select from their assigned sections after
+sign-in, and the session title comes from the selected course. The database
+policies restrict access to the student and assigned tutor for that section.
+Existing Auth users retain their current profile roles; administrators must
+assign courses and tutors before student/tutor accounts can enter sessions.
+To use two accounts at the same time, sign in from separate browser profiles;
+tabs in the same browser profile share the same Supabase session. Alternatively,
+sign out before switching accounts.
 
 ## Session audio and video
 

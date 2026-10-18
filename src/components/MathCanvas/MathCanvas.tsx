@@ -73,9 +73,6 @@ declare global {
   }
 }
 
-const sessionId = "demo-101";
-const channelTopic = `session:${sessionId}:graph`;
-
 function isGraphRole(value: unknown): value is GraphRole {
   return value === "student" || value === "tutor";
 }
@@ -135,7 +132,13 @@ function presenceParticipant(value: PresenceMetadata): GraphParticipant | null {
   };
 }
 
-export default function MathCanvas() {
+export default function MathCanvas({
+  sessionId,
+  sessionRole,
+}: {
+  sessionId: string;
+  sessionRole: GraphRole;
+}) {
   const calculatorRef = useRef<HTMLDivElement>(null);
   const calculatorInstanceRef = useRef<DesmosCalculator | null>(null);
   const channelRef = useRef<GraphChannel | null>(null);
@@ -511,13 +514,21 @@ export default function MathCanvas() {
       }
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, is_tutor")
         .eq("id", user.id)
         .maybeSingle();
       if (profileError) {
         throw new Error(`Unable to verify your account role: ${profileError.message}`);
       }
-      if (!profile || !isGraphRole(profile.role)) {
+      if (
+        !profile ||
+        !(
+          profile.role === sessionRole ||
+          (sessionRole === "tutor" &&
+            profile.role === "admin" &&
+            profile.is_tutor === true)
+        )
+      ) {
         throw new Error("Only student and tutor accounts can edit the shared graph.");
       }
       if (!active) {
@@ -525,12 +536,12 @@ export default function MathCanvas() {
       }
 
       userIdRef.current = user.id;
-      roleRef.current = profile.role;
-      setRole(profile.role);
+      roleRef.current = sessionRole;
+      setRole(sessionRole);
       setUserId(user.id);
 
       channel = supabase
-        .channel(channelTopic, {
+        .channel(`session:${sessionId}:graph`, {
           config: {
             private: true,
             presence: { key: user.id },
@@ -622,7 +633,7 @@ export default function MathCanvas() {
             void channel
               ?.track({
                 userId: user.id,
-                role: profile.role,
+                role: sessionRole,
                 email: user.email,
                 editing: false,
               })
@@ -755,7 +766,7 @@ export default function MathCanvas() {
         });
       }
     };
-  }, []);
+  }, [sessionId, sessionRole]);
 
   async function toggleEditLock(): Promise<void> {
     setErrorMessage("");

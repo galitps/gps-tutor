@@ -13,6 +13,7 @@ import {
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getIceServers } from "@/lib/webrtc/ice-servers";
 import { useSessionParticipants } from "@/components/SessionParticipants/SessionParticipants";
+import { clearLoginMode } from "@/lib/auth/login-mode";
 
 type CallRole = "student" | "tutor";
 type CallStatus =
@@ -54,8 +55,6 @@ type OutgoingSignal =
 type RealtimeChannel = ReturnType<
   ReturnType<typeof getSupabaseBrowserClient>["channel"]
 >;
-
-const sessionId = "demo-101";
 
 function isCallRole(value: unknown): value is CallRole {
   return value === "student" || value === "tutor";
@@ -131,7 +130,13 @@ function mediaErrorMessage(error: unknown): string {
     : "Unable to start your camera and microphone.";
 }
 
-export default function VideoInterface() {
+export default function VideoInterface({
+  sessionId,
+  sessionRole,
+}: {
+  sessionId: string;
+  sessionRole: CallRole;
+}) {
   const [role, setRole] = useState<CallRole | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [participants, setParticipants] = useState<
@@ -430,13 +435,21 @@ export default function VideoInterface() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, is_tutor")
         .eq("id", user.id)
         .maybeSingle();
       if (profileError) {
         throw new Error(`Unable to verify your account role: ${profileError.message}`);
       }
-      if (!profile || typeof profile.role !== "string" || !isCallRole(profile.role)) {
+      if (
+        !profile ||
+        !(
+          profile.role === sessionRole ||
+          (sessionRole === "tutor" &&
+            profile.role === "admin" &&
+            profile.is_tutor === true)
+        )
+      ) {
         throw new Error("This session is available to student and tutor accounts only.");
       }
       if (!active) {
@@ -444,9 +457,9 @@ export default function VideoInterface() {
       }
 
       userIdRef.current = user.id;
-      roleRef.current = profile.role;
+      roleRef.current = sessionRole;
       emailRef.current = user.email ?? null;
-      setRole(profile.role);
+      setRole(sessionRole);
       setEmail(user.email ?? null);
 
       sessionChannel = supabase
@@ -487,23 +500,23 @@ export default function VideoInterface() {
           setParticipants(currentParticipants);
           setParticipantEmails({
             student:
-              profile.role === "student"
+              sessionRole === "student"
                 ? user.email ?? null
                 : currentParticipants.student?.email ?? null,
             tutor:
-              profile.role === "tutor"
+              sessionRole === "tutor"
                 ? user.email ?? null
                 : currentParticipants.tutor?.email ?? null,
           });
 
-          const otherRole = profile.role === "student" ? "tutor" : "student";
+          const otherRole = sessionRole === "student" ? "tutor" : "student";
           const peer = currentParticipants[otherRole];
           peerIdRef.current = peer?.userId ?? null;
           peerInCallRef.current = peer?.inCall ?? false;
 
           if (inCallRef.current) {
             if (peer?.inCall) {
-              if (profile.role === "tutor") {
+              if (sessionRole === "tutor") {
                 void startTutorOffer();
               }
             } else if (!peerConnectionRef.current) {
@@ -534,7 +547,7 @@ export default function VideoInterface() {
           void sessionChannel
             ?.track({
               userId: user.id,
-              role: profile.role,
+              role: sessionRole,
               email: user.email,
               inCall: false,
             })
@@ -600,7 +613,13 @@ export default function VideoInterface() {
         });
       }
     };
-  }, [closePeerConnection, setParticipantEmails, stopLocalStream]);
+  }, [
+    closePeerConnection,
+    sessionId,
+    sessionRole,
+    setParticipantEmails,
+    stopLocalStream,
+  ]);
 
   async function startCall(): Promise<void> {
     if (isStarting || localStreamRef.current) {
@@ -741,6 +760,7 @@ export default function VideoInterface() {
       if (error) {
         throw new Error(`Call ended, but sign-out failed: ${error.message}`);
       }
+      clearLoginMode();
       window.location.replace("/");
     } catch (error: unknown) {
       console.error("Unable to sign out after ending call", error);

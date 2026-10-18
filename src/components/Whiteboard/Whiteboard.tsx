@@ -38,8 +38,6 @@ type WhiteboardChannel = ReturnType<
   ReturnType<typeof getSupabaseBrowserClient>["channel"]
 >;
 
-const sessionId = "demo-101";
-const channelTopic = `session:${sessionId}:whiteboard`;
 const boardWidth = 1000;
 const boardHeight = 700;
 const colors = [
@@ -146,7 +144,13 @@ function itemBounds(points: Point[]) {
   };
 }
 
-export default function Whiteboard() {
+export default function Whiteboard({
+  sessionId,
+  sessionRole,
+}: {
+  sessionId: string;
+  sessionRole: "student" | "tutor";
+}) {
   const svgRef = useRef<SVGSVGElement>(null);
   const channelRef = useRef<WhiteboardChannel | null>(null);
   const userIdRef = useRef<string | null>(null);
@@ -234,7 +238,7 @@ export default function Whiteboard() {
       }
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, is_tutor")
         .eq("id", user.id)
         .maybeSingle();
       if (profileError) {
@@ -242,7 +246,12 @@ export default function Whiteboard() {
       }
       if (
         !profile ||
-        (profile.role !== "student" && profile.role !== "tutor")
+        !(
+          profile.role === sessionRole ||
+          (sessionRole === "tutor" &&
+            profile.role === "admin" &&
+            profile.is_tutor === true)
+        )
       ) {
         throw new Error("Only student and tutor accounts can use the whiteboard.");
       }
@@ -252,7 +261,7 @@ export default function Whiteboard() {
 
       userIdRef.current = user.id;
       channel = supabase
-        .channel(channelTopic, {
+        .channel(`session:${sessionId}:whiteboard`, {
           config: {
             private: true,
             presence: { key: user.id },
@@ -276,7 +285,7 @@ export default function Whiteboard() {
           }
           if (status === "SUBSCRIBED") {
             void channel
-              ?.track({ userId: user.id, role: profile.role })
+              ?.track({ userId: user.id, role: sessionRole })
               .then((result) => {
                 if (result !== "ok") {
                   throw new Error(`Unable to publish whiteboard presence: ${result ?? "no response"}`);
@@ -339,7 +348,7 @@ export default function Whiteboard() {
         });
       }
     };
-  }, []);
+  }, [sessionId, sessionRole]);
 
   function pointFromEvent(event: PointerEvent<SVGSVGElement>): Point {
     const bounds = event.currentTarget.getBoundingClientRect();

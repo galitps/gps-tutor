@@ -18,12 +18,6 @@ type SessionChannel = ReturnType<
   ReturnType<typeof getSupabaseBrowserClient>["channel"]
 >;
 
-const sessionId = "demo-101";
-
-function isChatRole(role: string): role is ChatRole {
-  return role === "student" || role === "tutor";
-}
-
 function isChatMessage(message: unknown): message is ChatMessage {
   if (!message || typeof message !== "object") {
     return false;
@@ -53,7 +47,13 @@ function addMessage(
   );
 }
 
-export default function SessionChat() {
+export default function SessionChat({
+  sessionId,
+  sessionRole,
+}: {
+  sessionId: string;
+  sessionRole: ChatRole;
+}) {
   const [role, setRole] = useState<ChatRole | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<
@@ -90,21 +90,29 @@ export default function SessionChat() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, is_tutor")
         .eq("id", user.id)
         .maybeSingle();
 
       if (profileError) {
         throw new Error(`Unable to verify your account role: ${profileError.message}`);
       }
-      if (!profile || typeof profile.role !== "string" || !isChatRole(profile.role)) {
+      if (
+        !profile ||
+        !(
+          profile.role === sessionRole ||
+          (sessionRole === "tutor" &&
+            profile.role === "admin" &&
+            profile.is_tutor === true)
+        )
+      ) {
         throw new Error("This session is available to student and tutor accounts only.");
       }
       if (!active) {
         return;
       }
 
-      setRole(profile.role);
+      setRole(sessionRole);
       setUserId(user.id);
       setConnectionStatus("connecting");
 
@@ -204,7 +212,7 @@ export default function SessionChat() {
         });
       }
     };
-  }, []);
+  }, [sessionId, sessionRole]);
 
   async function handleSend(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

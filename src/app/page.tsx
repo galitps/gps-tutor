@@ -3,23 +3,35 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { BookOpen, GraduationCap, LockKeyhole } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  BookOpen,
+  GraduationCap,
+  LockKeyhole,
+  ShieldCheck,
+} from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { clearLoginMode, setLoginMode } from "@/lib/auth/login-mode";
 
 type UserRole = "admin" | "tutor" | "student";
-type SignInRole = Exclude<UserRole, "admin">;
+type SignInRole = UserRole;
 
-const signInRoles: { value: SignInRole; label: string; Icon: typeof BookOpen }[] =
-  [
-    { value: "student", label: "Student", Icon: BookOpen },
-    { value: "tutor", label: "Tutor", Icon: GraduationCap },
-  ];
+const signInRoles: {
+  value: SignInRole;
+  label: string;
+  Icon: typeof BookOpen;
+}[] = [
+  { value: "student", label: "Student", Icon: BookOpen },
+  { value: "tutor", label: "Tutor", Icon: GraduationCap },
+  { value: "admin", label: "Admin", Icon: ShieldCheck },
+];
 
 function isUserRole(role: string): role is UserRole {
   return role === "admin" || role === "tutor" || role === "student";
 }
 
 export default function Home() {
+  const router = useRouter();
   const [role, setRole] = useState<SignInRole>("student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +41,7 @@ export default function Home() {
 
   async function handleGoogleSignIn() {
     setErrorMessage("");
+    clearLoginMode();
     setIsSubmitting(true);
 
     try {
@@ -58,6 +71,7 @@ export default function Home() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrorMessage("");
+    clearLoginMode();
     setIsSubmitting(true);
 
     try {
@@ -80,7 +94,7 @@ export default function Home() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, is_tutor")
         .eq("id", data.user.id)
         .maybeSingle();
 
@@ -99,14 +113,16 @@ export default function Home() {
         return;
       }
 
-      if (profile.role !== role) {
+      const hasSelectedRole =
+        profile.role === role ||
+        (role === "tutor" &&
+          profile.role === "admin" &&
+          profile.is_tutor === true);
+      if (!hasSelectedRole) {
         const { error: signOutError } = await supabase.auth.signOut({
           scope: "local",
         });
-        const reason =
-          profile.role === "admin"
-            ? "Administrator accounts cannot sign in through the tutor or student screen."
-            : `This account is registered as a ${profile.role}. Choose the matching sign-in option.`;
+        const reason = `This account is registered as a ${profile.role}. Choose the matching sign-in option.`;
         setErrorMessage(
           signOutError
             ? `${reason} We also couldn't end the sign-in session: ${signOutError.message}`
@@ -115,7 +131,9 @@ export default function Home() {
         return;
       }
 
-      setSignedInAs(profile.role);
+      setLoginMode(role);
+      setSignedInAs(role);
+      router.push(role === "admin" ? "/admin" : "/courses");
     } catch (error: unknown) {
       console.error("Unable to sign in", error);
       setErrorMessage(
@@ -141,6 +159,7 @@ export default function Home() {
         return;
       }
 
+      clearLoginMode();
       setSignedInAs(null);
       setPassword("");
     } catch (error: unknown) {
@@ -205,9 +224,11 @@ export default function Home() {
                 <p className="mt-1 break-all text-sm text-slate-500">{email}</p>
                 <Link
                   className="mt-8 flex w-full justify-center rounded-xl bg-[#183b60] px-4 py-3 font-semibold text-white transition hover:bg-[#102d4d]"
-                  href="/session/demo"
+                  href={signedInAs === "admin" ? "/admin" : "/courses"}
                 >
-                  Continue to tutoring session
+                  {signedInAs === "admin"
+                    ? "Continue to administration"
+                    : "Select a course"}
                 </Link>
                 <button
                   className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
@@ -232,7 +253,7 @@ export default function Home() {
 
                 <div
                   aria-label="Sign-in account type"
-                  className="mt-8 grid grid-cols-2 gap-3"
+                  className="mt-8 grid grid-cols-3 gap-2"
                   role="group"
                 >
                   {signInRoles.map(({ value, label, Icon }) => (

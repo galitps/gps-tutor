@@ -2,20 +2,24 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { clearLoginMode, setLoginMode } from "@/lib/auth/login-mode";
 
 type CallbackStatus = "checking" | "success" | "error";
-type SignInRole = "tutor" | "student";
-type UserRole = SignInRole | "admin";
+type SignInRole = "tutor" | "student" | "admin";
+type UserRole = SignInRole;
 
 function isUserRole(role: string): role is UserRole {
   return role === "admin" || role === "tutor" || role === "student";
 }
 
 export default function AuthCallbackPage() {
+  const router = useRouter();
   const [status, setStatus] = useState<CallbackStatus>("checking");
   const [message, setMessage] = useState("Verifying your Google sign-in...");
   const [email, setEmail] = useState("");
+  const [signedInRole, setSignedInRole] = useState<SignInRole | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -29,7 +33,11 @@ export default function AuthCallbackPage() {
       }
 
       const selectedRole = params.get("role");
-      if (selectedRole !== "student" && selectedRole !== "tutor") {
+      if (
+        selectedRole !== "student" &&
+        selectedRole !== "tutor" &&
+        selectedRole !== "admin"
+      ) {
         throw new Error("The selected account type is missing or invalid. Please start again.");
       }
 
@@ -50,7 +58,7 @@ export default function AuthCallbackPage() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, is_tutor")
         .eq("id", session.user.id)
         .maybeSingle();
 
@@ -60,11 +68,15 @@ export default function AuthCallbackPage() {
       } else if (!profile || !isUserRole(profile.role)) {
         rejectionReason =
           "We couldn't find a valid role for your account. Please contact an administrator.";
-      } else if (profile.role !== selectedRole) {
-        rejectionReason =
-          profile.role === "admin"
-            ? "Administrator accounts cannot sign in through the tutor or student screen."
-            : `This account is registered as a ${profile.role}. Choose the matching sign-in option.`;
+      } else if (
+        profile.role !== selectedRole &&
+        !(
+          selectedRole === "tutor" &&
+          profile.role === "admin" &&
+          profile.is_tutor === true
+        )
+      ) {
+        rejectionReason = `This account is registered as a ${profile.role}. Choose the matching sign-in option.`;
       }
 
       if (rejectionReason) {
@@ -78,9 +90,13 @@ export default function AuthCallbackPage() {
       }
 
       if (!cancelled) {
+        clearLoginMode();
+        setLoginMode(selectedRole);
         setEmail(session.user.email ?? "");
+        setSignedInRole(selectedRole);
         setMessage(`Your ${selectedRole} account has been verified.`);
         setStatus("success");
+        router.replace(selectedRole === "admin" ? "/admin" : "/courses");
       }
     }
 
@@ -99,7 +115,7 @@ export default function AuthCallbackPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [router]);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-5 py-12 text-slate-900">
@@ -127,7 +143,13 @@ export default function AuthCallbackPage() {
         {status !== "checking" && (
           <Link
             className="mt-8 inline-flex rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d]"
-            href={status === "success" ? "/session/demo" : "/"}
+            href={
+              status === "success"
+                ? signedInRole === "admin"
+                  ? "/admin"
+                  : "/courses"
+                : "/"
+            }
           >
             {status === "success" ? "Continue" : "Return to sign in"}
           </Link>

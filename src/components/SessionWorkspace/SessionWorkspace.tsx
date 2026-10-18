@@ -7,7 +7,13 @@ import Whiteboard from "@/components/Whiteboard/Whiteboard";
 
 type WorkspaceView = "math" | "whiteboard";
 
-export default function SessionWorkspace() {
+export default function SessionWorkspace({
+  sessionId,
+  sessionRole,
+}: {
+  sessionId: string;
+  sessionRole: "student" | "tutor";
+}) {
   const [view, setView] = useState<WorkspaceView>("math");
 
   return (
@@ -56,7 +62,7 @@ export default function SessionWorkspace() {
         id="math-canvas-panel"
         role="tabpanel"
       >
-        <MathCanvas />
+        <MathCanvas sessionId={sessionId} sessionRole={sessionRole} />
       </div>
       <div
         aria-labelledby="whiteboard-tab"
@@ -64,7 +70,7 @@ export default function SessionWorkspace() {
         id="whiteboard-panel"
         role="tabpanel"
       >
-        <Whiteboard />
+        <Whiteboard sessionId={sessionId} sessionRole={sessionRole} />
       </div>
     </section>
   );
