@@ -73,7 +73,9 @@ Camera and microphone access requires HTTPS, except on localhost.
 The Desmos graph is shared live between signed-in student and tutor participants.
 To prevent remote updates interrupting expression entry, a participant must take
 edit control before changing the graph. Only one participant can hold the lock;
-the other sees changes live and can take control after it is released.
+the other sees changes live and can take control after it is released. The tutor
+can take control unilaterally; if the student is editing, their latest graph
+state is synchronized before control transfers.
 Apply `supabase/migrations/20261018191200_add_shared_graph_channel.sql` once to
 authorize graph synchronization over its own Realtime channel.
 Selecting **End call and sign out** stops local camera/microphone tracks, ends the

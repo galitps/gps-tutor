@@ -20,6 +20,7 @@ type GraphMessage =
   | { type: "state-request"; from: string; to: string }
   | { type: "state"; from: string; to: string; state: DesmosState }
   | { type: "lock-request"; from: string; to: string }
+  | { type: "lock-takeover"; from: string; to: string }
   | { type: "lock-release"; from: string; to: string }
   | {
       type: "lock-state";
@@ -97,6 +98,7 @@ function isGraphMessage(value: unknown): value is GraphMessage {
   switch (message.type) {
     case "state-request":
     case "lock-request":
+    case "lock-takeover":
     case "lock-release":
       return true;
     case "state":
@@ -143,6 +145,7 @@ export default function MathCanvas() {
   const lockOwnerIdRef = useRef<string | null>(null);
   const lockOwnerRoleRef = useRef<GraphRole | null>(null);
   const isEditingRef = useRef(false);
+  const tutorTakeoverPendingRef = useRef(false);
   const remoteStateRef = useRef<string | null>(null);
   const pendingStateRef = useRef<DesmosState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -261,10 +264,21 @@ export default function MathCanvas() {
       }
 
       if (coordinatorId === userId) {
-        if (lockOwnerIdRef.current && lockOwnerIdRef.current !== userId) {
+        if (
+          currentRole === "tutor" &&
+          lockOwnerIdRef.current &&
+          lockOwnerIdRef.current !== userId
+        ) {
+          setIsRequestingLock(true);
+          await sendMessage({
+            type: "lock-takeover",
+            to: lockOwnerIdRef.current,
+          });
           return;
         }
-        await publishLockState(userId, currentRole);
+        if (!lockOwnerIdRef.current || lockOwnerIdRef.current === userId) {
+          await publishLockState(userId, currentRole);
+        }
         return;
       }
 
@@ -338,6 +352,9 @@ export default function MathCanvas() {
       setLockOwnerId(ownerId);
       setLockOwnerRole(ownerRole);
       setIsEditing(hasEditLock);
+      if (hasEditLock) {
+        tutorTakeoverPendingRef.current = false;
+      }
       if (ownerId !== null) {
         setIsRequestingLock(false);
       }
@@ -404,6 +421,29 @@ export default function MathCanvas() {
         return;
       }
 
+      if (value.type === "lock-takeover") {
+        if (
+          userIdRef.current === coordinatorIdRef.current ||
+          roleRef.current !== "student" ||
+          value.from !== coordinatorIdRef.current ||
+          lockOwnerIdRef.current !== userId
+        ) {
+          return;
+        }
+
+        if (debounceTimer) {
+          clearTimeout(debounceTimer);
+          debounceTimer = null;
+        }
+        await sendCurrentGraph(value.from);
+        isEditingRef.current = false;
+        setIsEditing(false);
+        if (calculatorRef.current?.contains(document.activeElement)) {
+          (document.activeElement as HTMLElement).blur();
+        }
+        return;
+      }
+
       if (value.type === "lock-release") {
         if (
           userId === coordinatorIdRef.current &&
@@ -420,10 +460,14 @@ export default function MathCanvas() {
       }
 
       const canApply =
-        !isEditingRef.current &&
-        (value.from === lockOwnerIdRef.current ||
-          (!lockOwnerIdRef.current &&
-            value.from === coordinatorIdRef.current));
+        (!isEditingRef.current &&
+          (value.from === lockOwnerIdRef.current ||
+            (!lockOwnerIdRef.current &&
+              value.from === coordinatorIdRef.current))) ||
+        (tutorTakeoverPendingRef.current &&
+          roleRef.current === "tutor" &&
+          value.to === userId &&
+          value.from === lockOwnerIdRef.current);
       if (!canApply) {
         return;
       }
@@ -438,6 +482,17 @@ export default function MathCanvas() {
       if (currentState !== incomingState) {
         remoteStateRef.current = incomingState;
         calculator.setState(value.state, { allowUndo: true });
+      }
+      if (
+        tutorTakeoverPendingRef.current &&
+        roleRef.current === "tutor" &&
+        value.from === lockOwnerIdRef.current
+      ) {
+        const currentRole = roleRef.current;
+        tutorTakeoverPendingRef.current = false;
+        if (currentRole) {
+          await publishLockState(userId, currentRole);
+        }
       }
     }
 
@@ -703,6 +758,9 @@ export default function MathCanvas() {
 
   async function toggleEditLock(): Promise<void> {
     setErrorMessage("");
+    if (!isEditingRef.current && role === "tutor" && lockOwnerId !== null) {
+      tutorTakeoverPendingRef.current = true;
+    }
     try {
       if (isEditingRef.current) {
         const releaseEditLock = releaseEditLockRef.current;
@@ -718,6 +776,7 @@ export default function MathCanvas() {
         await requestEditLock();
       }
     } catch (error: unknown) {
+      tutorTakeoverPendingRef.current = false;
       console.error("Unable to change graph edit lock", error);
       setIsRequestingLock(false);
       setErrorMessage(
@@ -766,7 +825,7 @@ export default function MathCanvas() {
             !role ||
             !isReady ||
             isRequestingLock ||
-            (remoteEditor && !isEditing)
+            (remoteEditor && !isEditing && role !== "tutor")
           }
           onClick={() => void toggleEditLock()}
           type="button"
@@ -776,7 +835,9 @@ export default function MathCanvas() {
             : isEditing
               ? "Finish editing"
               : remoteEditor
-                ? `${lockOwnerRole ?? "Participant"} editing`
+                ? role === "tutor"
+                  ? `Take control from ${lockOwnerRole ?? "participant"}`
+                  : `${lockOwnerRole ?? "Participant"} editing`
                 : "Take edit control"}
         </button>
         <span aria-live="polite" className="text-[10px] text-slate-200">
