@@ -26,7 +26,7 @@ export default function SessionPage() {
         </section>
         {/* Right Column: Video Controls & Session Notes (4 cols)  */}
         <section className="lg:col-span-4 h-full min-h-0 flex flex-col gap-4">
-          <div className="min-h-0 flex-1">
+          <div className="h-48 shrink-0">
             <VideoInterface />
           </div>
           <SessionChat />

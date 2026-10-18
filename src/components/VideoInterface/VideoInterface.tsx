@@ -10,10 +10,10 @@ export default function VideoInterface() {
   return (
     <div className="flex flex-col h-full bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800">
       {/* Video Streams Grid */}
-      <div className="flex-1 p-3 grid grid-rows-2 gap-3 min-h-0">
+      <div className="flex-1 p-3 grid grid-cols-2 gap-3 min-h-0">
         {/* Student Tile */}
         <div className="relative bg-slate-800 rounded-lg overflow-hidden border border-slate-700/50 flex items-center justify-center">
-          <span className="text-slate-400 text-sm font-medium">Student Stream (Waiting to connect...)</span>
+          <span className="px-2 text-center text-xs font-medium text-slate-400">Student stream waiting</span>
           <div className="absolute bottom-2 left-2 bg-slate-950/80 px-2 py-0.5 rounded text-xs text-white">
             Alex (Student)
           </div>
@@ -36,7 +36,7 @@ export default function VideoInterface() {
       </div>
 
       {/* Control Bar */}
-      <div className="h-16 bg-slate-950 border-t border-slate-800 flex items-center justify-center gap-3 px-4">
+      <div className="h-14 shrink-0 bg-slate-950 border-t border-slate-800 flex items-center justify-center gap-3 px-4">
         <button
           onClick={() => setIsMuted(!isMuted)}
           className={`p-3 rounded-full transition ${
