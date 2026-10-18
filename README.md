@@ -70,6 +70,12 @@ Supabase session. Alternatively, sign out before switching accounts.
 Both participants must select **Start call** and allow camera and microphone
 access. Audio and video are sent directly between the two browsers with WebRTC.
 Camera and microphone access requires HTTPS, except on localhost.
+Selecting **End call and sign out** stops local camera/microphone tracks, ends the
+call, and returns that user to login. The remaining participant stays in the
+session in a waiting state and can start a new call when the other user returns.
+Apply `supabase/migrations/20261018184000_add_call_signaling_channel.sql` once
+to allow student and tutor accounts to exchange call signaling over a separate
+Realtime channel. Do not rerun migrations that have already been applied.
 
 The call uses public STUN servers by default. To use custom STUN or TURN servers,
 set `NEXT_PUBLIC_WEBRTC_ICE_SERVERS` to a JSON array in `.env.local`:

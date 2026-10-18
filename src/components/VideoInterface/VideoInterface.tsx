@@ -143,6 +143,7 @@ export default function VideoInterface() {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -341,7 +342,7 @@ export default function VideoInterface() {
         inCallRef.current = false;
         closePeerConnection();
         stopLocalStream();
-        setCallStatus("ready");
+        setCallStatus("waiting");
         const currentUserId = userIdRef.current;
         const currentRole = roleRef.current;
         if (sessionChannel && currentUserId && currentRole) {
@@ -447,7 +448,7 @@ export default function VideoInterface() {
       setEmail(user.email ?? null);
 
       sessionChannel = supabase
-        .channel(`session:${sessionId}`, {
+        .channel(`session:${sessionId}:call`, {
           config: {
             private: true,
             presence: { key: user.id },
@@ -664,6 +665,12 @@ export default function VideoInterface() {
   }
 
   async function endCall(notifyPeer = true): Promise<void> {
+    inCallRef.current = false;
+    closePeerConnection();
+    stopLocalStream();
+    setErrorMessage("");
+    setCallStatus("waiting");
+
     let hangupError = "";
     if (notifyPeer && peerIdRef.current) {
       try {
@@ -680,11 +687,10 @@ export default function VideoInterface() {
             : "The call ended locally, but the other participant could not be notified.";
       }
     }
-    inCallRef.current = false;
-    closePeerConnection();
-    stopLocalStream();
-    setErrorMessage(hangupError);
-    setCallStatus(hangupError ? "error" : "ready");
+    if (hangupError) {
+      setErrorMessage(hangupError);
+      setCallStatus("error");
+    }
 
     const channel = channelRef.current;
     const userId = userIdRef.current;
@@ -709,6 +715,30 @@ export default function VideoInterface() {
         );
         setCallStatus("error");
       }
+    }
+  }
+
+  async function endCallAndSignOut(): Promise<void> {
+    setIsSigningOut(true);
+    await endCall();
+
+    try {
+      const { error } = await getSupabaseBrowserClient().auth.signOut({
+        scope: "local",
+      });
+      if (error) {
+        throw new Error(`Call ended, but sign-out failed: ${error.message}`);
+      }
+      window.location.replace("/");
+    } catch (error: unknown) {
+      console.error("Unable to sign out after ending call", error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "The call ended, but sign-out failed. Please try again.",
+      );
+      setCallStatus("error");
+      setIsSigningOut(false);
     }
   }
 
@@ -839,17 +869,7 @@ export default function VideoInterface() {
           {isVideoOff ? <VideoOff aria-hidden="true" className="h-4 w-4" /> : <Video aria-hidden="true" className="h-4 w-4" />}
         </button>
 
-        {localStream ? (
-          <button
-            aria-label="End call"
-            className="rounded-full bg-red-600 p-2 text-white transition hover:bg-red-700"
-            onClick={() => void endCall()}
-            title="End call"
-            type="button"
-          >
-            <PhoneOff aria-hidden="true" className="h-4 w-4" />
-          </button>
-        ) : (
+        {!localStream && (
           <button
             aria-label="Start call"
             className="rounded-full bg-emerald-700 p-2 text-white transition hover:bg-emerald-600 disabled:cursor-wait disabled:opacity-60"
@@ -865,6 +885,20 @@ export default function VideoInterface() {
             )}
           </button>
         )}
+        <button
+          aria-label="End call and sign out"
+          className="rounded-full bg-red-600 p-2 text-white transition hover:bg-red-700 disabled:cursor-wait disabled:opacity-60"
+          disabled={isSigningOut}
+          onClick={() => void endCallAndSignOut()}
+          title="End call and sign out"
+          type="button"
+        >
+          {isSigningOut ? (
+            <LoaderCircle aria-hidden="true" className="h-4 w-4 animate-spin" />
+          ) : (
+            <PhoneOff aria-hidden="true" className="h-4 w-4" />
+          )}
+        </button>
       </div>
     </section>
   );
