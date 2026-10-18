@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   BookOpen,
+  Compass,
   GraduationCap,
   LockKeyhole,
   ShieldCheck,
@@ -182,7 +183,7 @@ export default function Home() {
           <div className="absolute -right-12 -top-12 h-56 w-56 rounded-full border border-white/10" />
           <div className="relative">
             <div className="mb-12 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
-              <GraduationCap aria-hidden="true" size={26} />
+              <Compass aria-hidden="true" size={26} />
             </div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-blue-200">
               GPS Tutor
@@ -195,7 +196,7 @@ export default function Home() {
             </p>
           </div>
           <p className="relative text-sm text-blue-100/60">
-            Learn together. Make progress.
+            We help you reach your goals
           </p>
         </section>
 
@@ -203,7 +204,7 @@ export default function Home() {
           <div className="mx-auto max-w-md">
             <div className="mb-8 lg:hidden">
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#142d4e] text-white">
-                <GraduationCap aria-hidden="true" size={24} />
+                <Compass aria-hidden="true" size={24} />
               </div>
               <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#142d4e]">
                 GPS Tutor
