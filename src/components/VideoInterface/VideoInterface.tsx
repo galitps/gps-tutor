@@ -826,7 +826,7 @@ export default function VideoInterface() {
                 <video
                   ref={isLocal ? localVideoRef : remoteVideoRef}
                   autoPlay
-                  className={`h-full w-full object-cover ${isLocal ? "scale-x-[-1]" : ""}`}
+                  className={`h-full w-full object-cover ${isLocal ? "" : "scale-x-[-1]"}`}
                   muted={isLocal}
                   playsInline
                 />
