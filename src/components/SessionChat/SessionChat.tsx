@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Send } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useSessionParticipants } from "@/components/SessionParticipants/SessionParticipants";
+import PrintButton from "@/components/PrintButton/PrintButton";
 
 type ChatRole = "student" | "tutor";
 type ChatMessage = {
@@ -244,8 +245,14 @@ export default function SessionChat() {
 
   if (connectionStatus === "checking" || connectionStatus === "connecting") {
     return (
-      <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-slate-800 bg-slate-900 p-4">
-        <h2 className="text-sm font-semibold text-slate-100">Session chat</h2>
+      <section
+        className="flex min-h-0 flex-1 flex-col rounded-xl border border-slate-800 bg-slate-900 p-4"
+        data-printable="chat"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold text-slate-100">Session chat</h2>
+          <PrintButton display="chat" label="chat" />
+        </div>
         <p aria-live="polite" className="mt-3 text-sm text-slate-400" role="status">
           {connectionStatus === "checking" ? "Checking your sign-in..." : "Connecting to session chat..."}
         </p>
@@ -255,8 +262,14 @@ export default function SessionChat() {
 
   if (connectionStatus === "signed-out") {
     return (
-      <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-slate-800 bg-slate-900 p-4">
-        <h2 className="text-sm font-semibold text-slate-100">Session chat</h2>
+      <section
+        className="flex min-h-0 flex-1 flex-col rounded-xl border border-slate-800 bg-slate-900 p-4"
+        data-printable="chat"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold text-slate-100">Session chat</h2>
+          <PrintButton display="chat" label="chat" />
+        </div>
         <p className="mt-3 text-sm text-slate-400">
           Sign in as a student or tutor to join this chat.
         </p>
@@ -269,8 +282,14 @@ export default function SessionChat() {
 
   if (!role || !userId) {
     return (
-      <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-slate-800 bg-slate-900 p-4">
-        <h2 className="text-sm font-semibold text-slate-100">Session chat</h2>
+      <section
+        className="flex min-h-0 flex-1 flex-col rounded-xl border border-slate-800 bg-slate-900 p-4"
+        data-printable="chat"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold text-slate-100">Session chat</h2>
+          <PrintButton display="chat" label="chat" />
+        </div>
         <p aria-live="polite" className="mt-3 text-sm text-red-300" role="alert">
           {errorMessage || "Unable to verify your tutoring session."}
         </p>
@@ -282,7 +301,10 @@ export default function SessionChat() {
   }
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
+    <section
+      className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900"
+      data-printable="chat"
+    >
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-slate-800 px-4 py-3">
         <div className="flex min-w-0 flex-wrap gap-x-4 gap-y-1 text-xs text-slate-300">
           <span className="break-all">
@@ -299,11 +321,13 @@ export default function SessionChat() {
           />
           {connectionStatus === "connected" ? "Connected" : "Connection issue"}
         </span>
+        <PrintButton display="chat" label="chat" />
       </div>
 
       <div
         aria-live="polite"
         className="min-h-0 flex-1 space-y-2 overflow-y-auto p-3"
+        data-chat-messages
         role="log"
         aria-label="Session chat messages"
       >
@@ -313,6 +337,7 @@ export default function SessionChat() {
           messages.map((message) => (
             <div
               key={message.id}
+              data-chat-message
               className={`max-w-[95%] rounded-lg px-3 py-2 text-xs ${
                 message.sender_id === userId
                   ? "ml-auto bg-sky-900/60 text-sky-100"
@@ -328,7 +353,11 @@ export default function SessionChat() {
         )}
       </div>
 
-      <form className="flex gap-2 border-t border-slate-800 p-3" onSubmit={handleSend}>
+      <form
+        className="flex gap-2 border-t border-slate-800 p-3"
+        data-print-hide
+        onSubmit={handleSend}
+      >
         <input
           aria-label="Message in session chat"
           className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-50"
@@ -349,7 +378,7 @@ export default function SessionChat() {
       </form>
 
       {errorMessage && (
-        <p aria-live="polite" className="mx-3 mb-3 rounded-md bg-red-950/60 px-3 py-2 text-xs text-red-200" role="alert">
+        <p aria-live="polite" className="mx-3 mb-3 rounded-md bg-red-950/60 px-3 py-2 text-xs text-red-200" role="alert" data-print-hide>
           {errorMessage}
         </p>
       )}

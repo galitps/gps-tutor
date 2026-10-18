@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import PrintButton from "@/components/PrintButton/PrintButton";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import styles from "./MathCanvas.module.css";
 
@@ -795,10 +796,14 @@ export default function MathCanvas() {
       : "Graph is read-only";
 
   return (
-    <div className={`${styles.container} relative`}>
+    <div
+      className={`${styles.container} relative`}
+      data-printable="math-canvas"
+    >
       {(isLoading || errorMessage) && (
         <div
           className={`${styles.statusOverlay} z-30 ${errorMessage ? "text-red-300" : ""}`}
+          data-print-hide
           role={errorMessage ? "alert" : "status"}
         >
           {errorMessage || "Loading Desmos Graphing Calculator..."}
@@ -815,9 +820,13 @@ export default function MathCanvas() {
           aria-label="Graph editing is locked"
           className="absolute inset-0 z-10 bg-slate-950/5"
           role="presentation"
+          data-print-hide
         />
       )}
-      <div className="absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md bg-slate-950/90 p-2 shadow">
+      <div
+        className="absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md bg-slate-950/90 p-2 shadow"
+        data-print-hide
+      >
         <button
           className="rounded bg-sky-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={
@@ -843,6 +852,9 @@ export default function MathCanvas() {
         <span aria-live="polite" className="text-[10px] text-slate-200">
           {lockLabel}
         </span>
+      </div>
+      <div className="absolute right-3 top-3 z-20" data-print-hide>
+        <PrintButton display="math-canvas" label="Math Canvas" />
       </div>
     </div>
   );

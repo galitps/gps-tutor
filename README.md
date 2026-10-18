@@ -84,7 +84,8 @@ between connected participants. Apply
 `supabase/migrations/20261018194200_add_shared_whiteboard_channel.sql` once to
 authorize whiteboard synchronization. The whiteboard keeps its current drawings
 while a participant remains connected; drawings are not persisted after everyone
-leaves the session.
+leaves the session. Use the Print button on the Math Canvas, Whiteboard, or chat
+to print just that display.
 Selecting **End call and sign out** stops local camera/microphone tracks, ends the
 call, and returns that user to login. The remaining participant stays in the
 session in a waiting state and can start a new call when the other user returns.

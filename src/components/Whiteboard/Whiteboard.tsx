@@ -11,6 +11,7 @@ import {
   Undo2,
 } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import PrintButton from "@/components/PrintButton/PrintButton";
 import styles from "./Whiteboard.module.css";
 
 type DrawingTool = "pen" | "line" | "rectangle" | "ellipse" | "arrow";
@@ -566,8 +567,14 @@ export default function Whiteboard() {
   }
 
   return (
-    <section className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-slate-300 bg-white">
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-slate-50 p-2">
+    <section
+      className="relative flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-slate-300 bg-white"
+      data-printable="whiteboard"
+    >
+      <div
+        className="absolute left-2 right-2 top-2 z-10 flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/95 p-2 shadow-sm"
+        data-print-hide
+      >
         <div aria-label="Drawing tools" className="flex items-center gap-1">
           {tools.map(({ value, label, Icon }) => (
             <button
@@ -609,6 +616,7 @@ export default function Whiteboard() {
         </div>
 
         <div className="ml-auto flex items-center gap-1">
+          <PrintButton display="whiteboard" label="Whiteboard" />
           <button
             aria-label="Undo last drawing"
             className="rounded-md p-2 text-slate-600 hover:bg-slate-200 disabled:opacity-40"
@@ -635,8 +643,9 @@ export default function Whiteboard() {
       {connectionError && (
         <p
           aria-live="polite"
-          className="border-b border-red-200 bg-red-50 px-3 py-1 text-xs text-red-700"
+          className="absolute left-2 right-2 top-16 z-10 border border-red-200 bg-red-50/95 px-3 py-1 text-xs text-red-700"
           role="alert"
+          data-print-hide
         >
           {connectionError}
         </p>
@@ -663,6 +672,7 @@ export default function Whiteboard() {
             aria-live="polite"
             className="pointer-events-none absolute inset-x-0 top-0 bg-white/90 px-3 py-2 text-center text-xs text-slate-500"
             role="status"
+            data-print-hide
           >
             {connectionError || "Connecting to shared whiteboard..."}
           </div>
