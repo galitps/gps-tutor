@@ -57,7 +57,9 @@ export default function SessionChat() {
   const [connectionStatus, setConnectionStatus] = useState<
     "checking" | "signed-out" | "connecting" | "connected" | "error"
   >("checking");
-  const [peerIsOnline, setPeerIsOnline] = useState(false);
+  const [participantEmails, setParticipantEmails] = useState<
+    Record<ChatRole, string | null>
+  >({ student: null, tutor: null });
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -118,14 +120,28 @@ export default function SessionChat() {
             return;
           }
 
-          const presence = sessionChannel.presenceState<{ role?: unknown }>();
-          const peerOnline = Object.values(presence).some((instances) =>
-            instances.some(
-              ({ role: presentRole }) =>
-                presentRole === (profile.role === "student" ? "tutor" : "student"),
-            ),
-          );
-          setPeerIsOnline(peerOnline);
+          const presence = sessionChannel.presenceState<{
+            role?: unknown;
+            email?: unknown;
+          }>();
+          const participants: Record<ChatRole, string | null> = {
+            student: null,
+            tutor: null,
+          };
+
+          for (const instances of Object.values(presence)) {
+            for (const instance of instances) {
+              if (
+                typeof instance.role === "string" &&
+                isChatRole(instance.role) &&
+                typeof instance.email === "string" &&
+                instance.email.length > 0
+              ) {
+                participants[instance.role] = instance.email;
+              }
+            }
+          }
+          setParticipantEmails(participants);
         })
         .on(
           "postgres_changes",
@@ -155,6 +171,7 @@ export default function SessionChat() {
             const presenceResult = await sessionChannel?.track({
               userId: user.id,
               role: profile.role,
+              email: user.email,
             });
             if (!active) {
               return;
@@ -310,9 +327,16 @@ export default function SessionChat() {
 
   return (
     <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
-      <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3">
-        <h2 className="text-sm font-semibold text-slate-100">Session chat</h2>
-        <span className="flex items-center gap-2 text-xs text-slate-400">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-slate-800 px-4 py-3">
+        <div className="flex min-w-0 flex-wrap gap-x-4 gap-y-1 text-xs text-slate-300">
+          <span className="break-all">
+            Student: {participantEmails.student ?? "waiting"}
+          </span>
+          <span className="break-all">
+            Tutor: {participantEmails.tutor ?? "waiting"}
+          </span>
+        </div>
+        <span className="flex shrink-0 items-center gap-2 text-xs text-slate-400">
           <span
             aria-hidden="true"
             className={`h-2 w-2 rounded-full ${connectionStatus === "connected" ? "bg-emerald-400" : "bg-red-400"}`}
@@ -321,91 +345,52 @@ export default function SessionChat() {
         </span>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-2 gap-2 p-3">
-        {[role, peerRole].map((windowRole) => {
-          const isOwnWindow = windowRole === role;
-          const isOnline = isOwnWindow
-            ? connectionStatus === "connected"
-            : peerIsOnline;
-          const visibleMessages = isOwnWindow
-            ? messages
-            : messages.filter((message) => message.sender_id !== userId);
-
-          return (
+      <div
+        aria-live="polite"
+        className="min-h-0 flex-1 space-y-2 overflow-y-auto p-3"
+        role="log"
+        aria-label="Session chat messages"
+      >
+        {messages.length === 0 ? (
+          <p className="text-xs text-slate-500">No messages yet.</p>
+        ) : (
+          messages.map((message) => (
             <div
-              key={windowRole}
-              aria-label={`${windowRole} chat window`}
-              className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-950/70"
+              key={message.id}
+              className={`max-w-[95%] rounded-lg px-3 py-2 text-xs ${
+                message.sender_id === userId
+                  ? "ml-auto bg-sky-900/60 text-sky-100"
+                  : "bg-slate-800 text-slate-200"
+              }`}
             >
-              <div className="flex min-h-10 items-center justify-between border-b border-slate-800 px-2">
-                <h3 className="text-xs font-semibold capitalize text-slate-200">
-                  {windowRole} chat
-                </h3>
-                <span className={`text-[10px] ${isOnline ? "text-emerald-400" : "text-slate-500"}`}>
-                  {isOnline ? "Online" : `Waiting for ${windowRole}`}
-                </span>
-              </div>
-
-              <div
-                aria-live="polite"
-                className="flex-1 space-y-2 overflow-y-auto p-2"
-                role="log"
-                aria-label={`${windowRole} chat messages`}
-              >
-                {visibleMessages.length === 0 ? (
-                  <p className="text-xs text-slate-500">
-                    {isOnline
-                      ? "No messages yet."
-                      : `Waiting for ${windowRole} to join.`}
-                  </p>
-                ) : (
-                  visibleMessages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`max-w-[95%] rounded-lg px-2 py-1.5 text-xs ${
-                        message.sender_id === userId
-                          ? "ml-auto bg-sky-900/60 text-sky-100"
-                          : "bg-slate-800 text-slate-200"
-                      }`}
-                    >
-                      <p className="mb-0.5 text-[10px] font-medium capitalize text-slate-400">
-                        {message.sender_id === userId ? role : peerRole}
-                      </p>
-                      <p className="break-words">{message.content}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {isOwnWindow ? (
-                <form className="flex gap-1.5 border-t border-slate-800 p-2" onSubmit={handleSend}>
-                  <input
-                    aria-label={`Message in ${role} chat`}
-                    className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-900 px-2 py-1.5 text-xs text-slate-100 outline-none placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-50"
-                    disabled={connectionStatus !== "connected" || isSending}
-                    maxLength={1000}
-                    onChange={(event) => setDraft(event.target.value)}
-                    placeholder="Type a message..."
-                    value={draft}
-                  />
-                  <button
-                    aria-label="Send message"
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-sky-700 text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={!draft.trim() || connectionStatus !== "connected" || isSending}
-                    type="submit"
-                  >
-                    <Send aria-hidden="true" size={14} />
-                  </button>
-                </form>
-              ) : (
-                <p className="border-t border-slate-800 px-2 py-2 text-[10px] text-slate-500">
-                  {isOnline ? `${windowRole} chat is active.` : `Waiting for ${windowRole}.`}
-                </p>
-              )}
+              <p className="mb-0.5 text-[10px] font-medium capitalize text-slate-400">
+                {message.sender_id === userId ? role : peerRole}
+              </p>
+              <p className="break-words">{message.content}</p>
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
+
+      <form className="flex gap-2 border-t border-slate-800 p-3" onSubmit={handleSend}>
+        <input
+          aria-label="Message in session chat"
+          className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-50"
+          disabled={connectionStatus !== "connected" || isSending}
+          maxLength={1000}
+          onChange={(event) => setDraft(event.target.value)}
+          placeholder="Type a message..."
+          value={draft}
+        />
+        <button
+          aria-label="Send message"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-sky-700 text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={!draft.trim() || connectionStatus !== "connected" || isSending}
+          type="submit"
+        >
+          <Send aria-hidden="true" size={14} />
+        </button>
+      </form>
 
       {errorMessage && (
         <p aria-live="polite" className="mx-3 mb-3 rounded-md bg-red-950/60 px-3 py-2 text-xs text-red-200" role="alert">

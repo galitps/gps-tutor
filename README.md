@@ -24,8 +24,9 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 Sign-in uses Supabase Auth. Configure `NEXT_PUBLIC_SUPABASE_URL` and
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `.env.local`, then apply the SQL
-migration in `supabase/migrations/20261010233800_create_profiles.sql` to the
-Supabase project.
+migrations in `supabase/migrations/` to the Supabase project in timestamp order.
+Apply each migration once; when using the Supabase SQL Editor, run only the
+migration that has not already been applied.
 
 To enable Google sign-in:
 
@@ -41,21 +42,28 @@ To enable Google sign-in:
    settings. The app itself uses the existing Supabase URL and publishable key;
    Google secrets must not be added to client-side environment variables.
 
-The migration creates a `public.profiles` row for each Auth user and assigns
-the `student` role by default (including existing Auth users the first time it
-runs). Profiles are visible only to their owner. To provision a tutor or
-admin, create the account in Supabase Auth and update its role from the
-Supabase SQL Editor:
+The profile migration creates a `public.profiles` row for each Auth user and
+assigns the `student` role by default, including for existing Auth users. The
+email migration adds the Auth email to each profile, restores missing profile
+rows as students, and keeps the profile email in sync if the Auth email changes.
+If the session-messages migration has already been applied, do not run it again
+when applying the profile email migration.
+Profiles are visible only to their owner in the app. Do not delete profile rows
+to change a role: the Auth account remains, but its profile will be missing
+until it is restored. To provision a tutor or admin, create the account in
+Supabase Auth and update its role from the Supabase SQL Editor:
 
 ```sql
 update public.profiles
 set role = 'tutor'
-where id = (select id from auth.users where email = 'tutor@example.com');
+where email = 'tutor@example.com';
 ```
 
 Use `admin` instead of `tutor` to provision an administrator. Role selection on
 the sign-in screen is checked against the stored profile role; it does not
-assign or change roles.
+assign or change roles. To use two accounts at the same time, sign in from
+separate browser profiles; tabs in the same browser profile share the same
+Supabase session. Alternatively, sign out before switching accounts.
 
 ## Learn More
 
