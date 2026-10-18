@@ -70,6 +70,10 @@ Supabase session. Alternatively, sign out before switching accounts.
 Both participants must select **Start call** and allow camera and microphone
 access. Audio and video are sent directly between the two browsers with WebRTC.
 Camera and microphone access requires HTTPS, except on localhost.
+The Desmos graph is shared live between signed-in student and tutor participants.
+Changes made by either participant are synchronized to the other participant.
+Apply `supabase/migrations/20261018191200_add_shared_graph_channel.sql` once to
+authorize graph synchronization over its own Realtime channel.
 Selecting **End call and sign out** stops local camera/microphone tracks, ends the
 call, and returns that user to login. The remaining participant stays in the
 session in a waiting state and can start a new call when the other user returns.
