@@ -398,8 +398,8 @@ export default function Home() {
                 </form>
 
                 <p className="mt-6 text-center text-sm leading-6 text-slate-500">
-                  Don&apos;t have an account? Ask your administrator to set one
-                  up.
+                  New here? Continue with Google to send your administrator an
+                  account request.
                 </p>
               </>
             )}

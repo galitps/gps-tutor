@@ -42,10 +42,13 @@ To enable Google sign-in:
    settings. The app itself uses the existing Supabase URL and publishable key;
    Google secrets must not be added to client-side environment variables.
 
-The profile migration creates a `public.profiles` row for each Auth user and
-assigns the `student` role by default, including for existing Auth users. The
-email migration adds the Auth email to each profile, restores missing profile
-rows as students, and keeps the profile email in sync if the Auth email changes.
+The initial profile migration creates a `public.profiles` row for each Auth user
+and assigns the `student` role by default, including for existing Auth users.
+The email migration adds the Auth email to each profile, restores missing
+profile rows as students, and keeps the profile email in sync if the Auth email
+changes. The admin user-management migration changes new sign-ins so they are
+not automatically made students: users without a profile can send an account
+request for administrator review instead.
 If the session-messages migration has already been applied, do not run it again
 when applying the profile email migration.
 To provision a tutor or admin, create the account in Supabase Auth and update
@@ -75,6 +78,12 @@ sign-in, and the session title comes from the selected course. The database
 policies restrict access to the student and assigned tutor for that section.
 Existing Auth users retain their current profile roles; administrators must
 assign courses and tutors before student/tutor accounts can enter sessions.
+Administrators can add signed-in users as students or tutors, create a student
+with an optional course assignment, review account requests and their messages,
+and delete users, courses, or course assignments. Deleting a user warns about
+their assignments and removes those assignments and their session messages.
+New users can continue with Google and submit a message to the administrator;
+their account becomes a student or tutor only after the administrator adds it.
 To use two accounts at the same time, sign in from separate browser profiles;
 tabs in the same browser profile share the same Supabase session. Alternatively,
 sign out before switching accounts.

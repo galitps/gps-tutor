@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { clearLoginMode, setLoginMode } from "@/lib/auth/login-mode";
 
-type CallbackStatus = "checking" | "success" | "error";
+type CallbackStatus = "checking" | "success" | "onboarding" | "pending" | "error";
 type SignInRole = "tutor" | "student" | "admin";
 type UserRole = SignInRole;
 
@@ -20,6 +20,9 @@ export default function AuthCallbackPage() {
   const [message, setMessage] = useState("Verifying your Google sign-in...");
   const [email, setEmail] = useState("");
   const [signedInRole, setSignedInRole] = useState<SignInRole | null>(null);
+  const [onboardingMessage, setOnboardingMessage] = useState("");
+  const [requestMessage, setRequestMessage] = useState("");
+  const [isSubmittingRequest, setIsSubmittingRequest] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -62,12 +65,41 @@ export default function AuthCallbackPage() {
         .eq("id", session.user.id)
         .maybeSingle();
 
-      let rejectionReason: string | null = null;
       if (profileError) {
-        rejectionReason = `We couldn't verify your account role: ${profileError.message}`;
-      } else if (!profile || !isUserRole(profile.role)) {
-        rejectionReason =
-          "We couldn't find a valid role for your account. Please contact an administrator.";
+        throw new Error(`We couldn't verify your account role: ${profileError.message}`);
+      }
+
+      if (!profile) {
+        if (selectedRole === "admin") {
+          throw new Error("Administrator accounts must be provisioned by an administrator.");
+        }
+        const { data: request, error: requestError } = await supabase
+          .from("onboarding_requests")
+          .select("message")
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+        if (requestError) {
+          throw new Error(`Unable to check your request status: ${requestError.message}`);
+        }
+        if (!cancelled) {
+          clearLoginMode();
+          setLoginMode(selectedRole);
+          setEmail(session.user.email ?? "");
+          setSignedInRole(selectedRole);
+          setOnboardingMessage(request?.message ?? "");
+          setMessage(
+            request
+              ? "Your request has been sent to the administrator. You’ll be able to continue once your account is set up."
+              : "Tell the administrator what you need so they can set up your account and course assignment.",
+          );
+          setStatus(request ? "pending" : "onboarding");
+        }
+        return;
+      }
+
+      let rejectionReason: string | null = null;
+      if (!isUserRole(profile.role)) {
+        rejectionReason = "We couldn't find a valid role for your account. Please contact an administrator.";
       } else if (
         profile.role !== selectedRole &&
         !(
@@ -117,6 +149,60 @@ export default function AuthCallbackPage() {
     };
   }, [router]);
 
+  async function submitOnboardingRequest(
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> {
+    event.preventDefault();
+    setRequestMessage("");
+    setIsSubmittingRequest(true);
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+      if (authError) {
+        throw new Error(`Unable to verify your sign-in: ${authError.message}`);
+      }
+
+      if (!user || !signedInRole || signedInRole === "admin") {
+        throw new Error("Sign in again as a student or tutor to submit a request.");
+      }
+      const { error } = await supabase.from("onboarding_requests").insert({
+        user_id: user.id,
+        email: user.email ?? "",
+        requested_role: signedInRole,
+        message: onboardingMessage.trim(),
+      });
+      if (error) {
+        throw new Error(`Unable to send your request: ${error.message}`);
+      }
+      setMessage(
+        "Your request has been sent to the administrator. You’ll be able to continue once your account is set up.",
+      );
+      setStatus("pending");
+    } catch (error: unknown) {
+      console.error("Unable to submit account request", error);
+      setRequestMessage(
+        error instanceof Error ? error.message : "Unable to send your request.",
+      );
+    } finally {
+      setIsSubmittingRequest(false);
+    }
+  }
+
+  async function signOutFromPendingRequest(): Promise<void> {
+    const { error } = await getSupabaseBrowserClient().auth.signOut({
+      scope: "local",
+    });
+    if (error) {
+      setRequestMessage(`Unable to sign out: ${error.message}`);
+      return;
+    }
+    clearLoginMode();
+    window.location.replace("/");
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-5 py-12 text-slate-900">
       <section className="w-full max-w-lg rounded-3xl bg-white p-8 shadow-xl shadow-slate-900/5 sm:p-12">
@@ -128,6 +214,10 @@ export default function AuthCallbackPage() {
             ? "Completing sign-in"
             : status === "success"
               ? "You’re signed in"
+              : status === "onboarding"
+                ? "Request an account"
+                : status === "pending"
+                  ? "Request submitted"
               : "Sign-in needs attention"}
         </h1>
         <p
@@ -140,7 +230,56 @@ export default function AuthCallbackPage() {
           {message}
         </p>
         {email && <p className="mt-2 break-all text-sm text-slate-500">{email}</p>}
-        {status !== "checking" && (
+        {status === "onboarding" && (
+          <form className="mt-6 space-y-4" onSubmit={(event) => void submitOnboardingRequest(event)}>
+            <label className="block text-sm font-medium text-slate-700" htmlFor="onboarding-message">
+              Message for the administrator
+            </label>
+            <textarea
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-[#386b9a] focus:ring-4 focus:ring-blue-100"
+              id="onboarding-message"
+              maxLength={2000}
+              onChange={(event) => setOnboardingMessage(event.target.value)}
+              required
+              rows={5}
+              value={onboardingMessage}
+            />
+            {requestMessage && (
+              <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+                {requestMessage}
+              </p>
+            )}
+            <button
+              className="w-full rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d] disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={isSubmittingRequest || !onboardingMessage.trim()}
+              type="submit"
+            >
+              {isSubmittingRequest ? "Sending request..." : "Send request"}
+            </button>
+          </form>
+        )}
+        {status === "pending" && onboardingMessage && (
+          <blockquote className="mt-5 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+            {onboardingMessage}
+          </blockquote>
+        )}
+        {status === "pending" && requestMessage && (
+          <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+            {requestMessage}
+          </p>
+        )}
+        {status === "pending" && (
+          <button
+            className="mt-8 inline-flex rounded-xl border border-slate-200 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50"
+            onClick={() => void signOutFromPendingRequest()}
+            type="button"
+          >
+            Sign out
+          </button>
+        )}
+        {status !== "checking" &&
+          status !== "onboarding" &&
+          status !== "pending" && (
           <Link
             className="mt-8 inline-flex rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d]"
             href={

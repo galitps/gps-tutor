@@ -19,11 +19,19 @@ type CourseSection = {
   student_id: string;
   tutor_id: string | null;
 };
+type OnboardingRequest = {
+  user_id: string;
+  email: string;
+  requested_role: ProfileRole;
+  message: string;
+  created_at: string;
+};
 type DashboardData = {
   adminId: string;
   courses: Course[];
   profiles: AdminProfile[];
   sections: CourseSection[];
+  requests: OnboardingRequest[];
 };
 
 function isProfileRole(value: unknown): value is ProfileRole {
@@ -35,10 +43,15 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingCourse, setIsSavingCourse] = useState(false);
   const [isAssigningStudent, setIsAssigningStudent] = useState(false);
+  const [isCreatingProfile, setIsCreatingProfile] = useState(false);
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [selectedCourseId, setSelectedCourseId] = useState("");
   const [selectedStudentId, setSelectedStudentId] = useState("");
+  const [newUserEmail, setNewUserEmail] = useState("");
+  const [newUserRole, setNewUserRole] = useState<ProfileRole>("student");
+  const [newUserCourseId, setNewUserCourseId] = useState("");
+  const [requestCourseIds, setRequestCourseIds] = useState<Record<string, string>>({});
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -70,7 +83,7 @@ export default function AdminDashboard() {
       throw new Error("This screen is available to administrators only.");
     }
 
-    const [coursesResult, profilesResult, sectionsResult] = await Promise.all([
+    const [coursesResult, profilesResult, sectionsResult, requestsResult] = await Promise.all([
       supabase
         .from("courses")
         .select("id, name, description")
@@ -84,6 +97,10 @@ export default function AdminDashboard() {
         .from("course_sections")
         .select("id, course_id, student_id, tutor_id")
         .order("created_at", { ascending: true }),
+      supabase
+        .from("onboarding_requests")
+        .select("user_id, email, requested_role, message, created_at")
+        .order("created_at", { ascending: true }),
     ]);
     if (coursesResult.error) {
       throw new Error(`Unable to load courses: ${coursesResult.error.message}`);
@@ -93,6 +110,9 @@ export default function AdminDashboard() {
     }
     if (sectionsResult.error) {
       throw new Error(`Unable to load course assignments: ${sectionsResult.error.message}`);
+    }
+    if (requestsResult.error) {
+      throw new Error(`Unable to load account requests: ${requestsResult.error.message}`);
     }
 
     const profiles = (profilesResult.data ?? []).flatMap((candidate) => {
@@ -114,6 +134,7 @@ export default function AdminDashboard() {
       courses: (coursesResult.data ?? []) as Course[],
       profiles,
       sections: (sectionsResult.data ?? []) as CourseSection[],
+      requests: (requestsResult.data ?? []) as OnboardingRequest[],
     });
   }
 
@@ -237,6 +258,144 @@ export default function AdminDashboard() {
     }
   }
 
+  async function createProfile(
+    email: string,
+    role: ProfileRole,
+    courseId: string | null,
+  ): Promise<boolean> {
+    setErrorMessage("");
+    setSuccessMessage("");
+    setIsCreatingProfile(true);
+    try {
+      const { error } = await getSupabaseBrowserClient().rpc("admin_create_profile", {
+        target_email: email.trim(),
+        target_role: role,
+        target_course_id: courseId || null,
+      });
+      if (error) {
+        throw new Error(`Unable to add ${role}: ${error.message}`);
+      }
+      setSuccessMessage(
+        role === "student" && courseId
+          ? "Student added and assigned to the selected course."
+          : `${role === "student" ? "Student" : "Tutor"} added.`,
+      );
+      await loadDashboard();
+      return true;
+    } catch (error: unknown) {
+      console.error("Unable to create user profile", error);
+      setErrorMessage(error instanceof Error ? error.message : "Unable to add user.");
+      return false;
+    } finally {
+      setIsCreatingProfile(false);
+    }
+  }
+
+  async function addUser(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    if (await createProfile(newUserEmail, newUserRole, newUserCourseId)) {
+      setNewUserEmail("");
+      setNewUserCourseId("");
+    }
+  }
+
+  async function deleteProfile(profile: AdminProfile): Promise<void> {
+    if (!data || profile.role === "admin") {
+      return;
+    }
+    const assignments = data.sections.filter(
+      (section) =>
+        section.student_id === profile.id || section.tutor_id === profile.id,
+    );
+    const assignmentDescription = assignments.length
+      ? `\n\n${assignments.length} existing course assignment${assignments.length === 1 ? "" : "s"} will also be removed.`
+      : "";
+    if (
+      !window.confirm(
+        `Delete ${profile.role} ${profile.email ?? profile.id}?${assignmentDescription}\n\nThis also permanently removes the user's sign-in account.`,
+      )
+    ) {
+      return;
+    }
+
+    setErrorMessage("");
+    setSuccessMessage("");
+    try {
+      const { error } = await getSupabaseBrowserClient().rpc("admin_delete_profile", {
+        target_profile_id: profile.id,
+      });
+      if (error) {
+        throw new Error(`Unable to delete ${profile.role}: ${error.message}`);
+      }
+      setSuccessMessage(`${profile.role === "student" ? "Student" : "Tutor"} deleted.`);
+      await loadDashboard();
+    } catch (error: unknown) {
+      console.error("Unable to delete user profile", error);
+      setErrorMessage(error instanceof Error ? error.message : "Unable to delete user.");
+    }
+  }
+
+  async function deleteCourse(course: Course): Promise<void> {
+    if (!data) {
+      return;
+    }
+    const assignmentCount = data.sections.filter(
+      (section) => section.course_id === course.id,
+    ).length;
+    if (
+      !window.confirm(
+        `Delete course "${course.name}"?${assignmentCount ? `\n\n${assignmentCount} course assignment${assignmentCount === 1 ? "" : "s"} will also be removed.` : ""}`,
+      )
+    ) {
+      return;
+    }
+    setErrorMessage("");
+    setSuccessMessage("");
+    try {
+      const { error } = await getSupabaseBrowserClient()
+        .from("courses")
+        .delete()
+        .eq("id", course.id);
+      if (error) {
+        throw new Error(`Unable to delete course: ${error.message}`);
+      }
+      setSuccessMessage("Course deleted.");
+      await loadDashboard();
+    } catch (error: unknown) {
+      console.error("Unable to delete course", error);
+      setErrorMessage(error instanceof Error ? error.message : "Unable to delete course.");
+    }
+  }
+
+  async function deleteAssignment(section: CourseSection): Promise<void> {
+    const course = data?.courses.find(({ id }) => id === section.course_id);
+    if (
+      !window.confirm(
+        `Delete the ${course?.name ?? "course"} assignment for ${profileById.get(section.student_id)?.email ?? "this student"}? This also removes the section's session data.`,
+      )
+    ) {
+      return;
+    }
+    setErrorMessage("");
+    setSuccessMessage("");
+    try {
+      const { error } = await getSupabaseBrowserClient()
+        .from("course_sections")
+        .delete()
+        .eq("id", section.id);
+      if (error) {
+        throw new Error(`Unable to delete course assignment: ${error.message}`);
+      }
+      setSuccessMessage("Course assignment deleted.");
+      await loadDashboard();
+    } catch (error: unknown) {
+      console.error("Unable to delete course assignment", error);
+      setErrorMessage(
+        error instanceof Error ? error.message : "Unable to delete course assignment.",
+      );
+    }
+  }
+
   async function signOut(): Promise<void> {
     const { error } = await getSupabaseBrowserClient().auth.signOut({
       scope: "local",
@@ -265,7 +424,7 @@ export default function AdminDashboard() {
             <p className="text-sm font-semibold uppercase tracking-widest text-sky-300">
               GPS Tutor administration
             </p>
-            <h1 className="mt-2 text-2xl font-semibold">Manage courses</h1>
+            <h1 className="mt-2 text-2xl font-semibold">Manage users and courses</h1>
             <p className="mt-1 text-sm text-slate-400">
               Admin accounts cannot enter tutoring sessions. Sign out and sign in as a tutor to tutor a student.
             </p>
@@ -297,6 +456,130 @@ export default function AdminDashboard() {
         ) : data ? (
           <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
             <div className="space-y-6">
+              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
+                <h2 className="text-lg font-semibold">Add a student or tutor</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  The user must sign in first. You can add an account here even if they have not sent a request.
+                </p>
+                <form className="mt-4 space-y-3" onSubmit={(event) => void addUser(event)}>
+                  <label className="block text-sm text-slate-300" htmlFor="new-user-email">
+                    User email
+                  </label>
+                  <input
+                    autoComplete="email"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    id="new-user-email"
+                    onChange={(event) => setNewUserEmail(event.target.value)}
+                    required
+                    type="email"
+                    value={newUserEmail}
+                  />
+                  <label className="block text-sm text-slate-300" htmlFor="new-user-role">
+                    Account type
+                  </label>
+                  <select
+                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    id="new-user-role"
+                    onChange={(event) => {
+                      const role = event.target.value;
+                      if (isProfileRole(role)) {
+                        setNewUserRole(role);
+                        if (role === "tutor") {
+                          setNewUserCourseId("");
+                        }
+                      }
+                    }}
+                    value={newUserRole}
+                  >
+                    <option value="student">Student</option>
+                    <option value="tutor">Tutor</option>
+                  </select>
+                  {newUserRole === "student" && (
+                    <>
+                      <label className="block text-sm text-slate-300" htmlFor="new-user-course">
+                        Course (optional)
+                      </label>
+                      <select
+                        className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                        id="new-user-course"
+                        onChange={(event) => setNewUserCourseId(event.target.value)}
+                        value={newUserCourseId}
+                      >
+                        <option value="">Do not assign a course yet</option>
+                        {data.courses.map((course) => (
+                          <option key={course.id} value={course.id}>{course.name}</option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+                  <button
+                    className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50"
+                    disabled={isCreatingProfile || !newUserEmail.trim()}
+                    type="submit"
+                  >
+                    {isCreatingProfile ? "Adding..." : `Add ${newUserRole}`}
+                  </button>
+                </form>
+              </section>
+
+              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
+                <h2 className="text-lg font-semibold">New account requests</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  Review the user’s message, then create their account. Assign a course when adding a student.
+                </p>
+                {data.requests.length ? (
+                  <ul className="mt-4 space-y-4">
+                    {data.requests.map((request) => (
+                      <li key={request.user_id} className="rounded-lg border border-slate-800 p-3">
+                        <p className="break-all font-medium">{request.email}</p>
+                        <p className="mt-1 text-xs uppercase tracking-wide text-sky-300">
+                          Requested {request.requested_role}
+                        </p>
+                        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-300">
+                          {request.message}
+                        </p>
+                        {request.requested_role === "student" && (
+                          <label className="mt-3 block text-sm text-slate-300">
+                            Course assignment (optional)
+                            <select
+                              className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2"
+                              onChange={(event) =>
+                                setRequestCourseIds((current) => ({
+                                  ...current,
+                                  [request.user_id]: event.target.value,
+                                }))
+                              }
+                              value={requestCourseIds[request.user_id] ?? ""}
+                            >
+                              <option value="">No course yet</option>
+                              {data.courses.map((course) => (
+                                <option key={course.id} value={course.id}>{course.name}</option>
+                              ))}
+                            </select>
+                          </label>
+                        )}
+                        <button
+                          className="mt-3 rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50"
+                          disabled={isCreatingProfile}
+                          onClick={() =>
+                            void createProfile(
+                              request.email,
+                              request.requested_role,
+                              requestCourseIds[request.user_id] ?? "",
+                            )
+                          }
+                          type="button"
+                        >
+                          {isCreatingProfile ? "Adding..." : `Add ${request.requested_role}`}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-3 text-sm text-slate-400">There are no pending account requests.</p>
+                )}
+              </section>
+
               <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
                 <h2 className="text-lg font-semibold">Define a course</h2>
                 <form className="mt-4 space-y-3" onSubmit={(event) => void createCourse(event)}>
@@ -389,16 +672,54 @@ export default function AdminDashboard() {
                 {data.courses.length ? (
                   <ul className="mt-3 space-y-3">
                     {data.courses.map((course) => (
-                      <li key={course.id} className="border-t border-slate-800 pt-3">
-                        <p className="font-medium">{course.name}</p>
-                        {course.description && (
-                          <p className="mt-1 text-sm text-slate-400">{course.description}</p>
-                        )}
+                      <li key={course.id} className="flex items-start justify-between gap-3 border-t border-slate-800 pt-3">
+                        <div className="min-w-0">
+                          <p className="font-medium">{course.name}</p>
+                          {course.description && (
+                            <p className="mt-1 text-sm text-slate-400">{course.description}</p>
+                          )}
+                        </div>
+                        <button
+                          className="shrink-0 rounded-lg border border-red-900 px-3 py-1.5 text-xs text-red-300 hover:bg-red-950/60"
+                          onClick={() => void deleteCourse(course)}
+                          type="button"
+                        >
+                          Delete
+                        </button>
                       </li>
                     ))}
                   </ul>
                 ) : (
                   <p className="mt-3 text-sm text-slate-400">No courses have been created.</p>
+                )}
+              </section>
+
+              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
+                <h2 className="text-lg font-semibold">Students and tutors</h2>
+                {data.profiles.filter(({ role }) => role !== "admin").length ? (
+                  <ul className="mt-3 divide-y divide-slate-800">
+                    {data.profiles
+                      .filter(({ role }) => role !== "admin")
+                      .map((profile) => (
+                        <li key={profile.id} className="flex items-center justify-between gap-3 py-3">
+                          <div className="min-w-0">
+                            <p className="break-all text-sm font-medium">
+                              {profile.email ?? profile.id}
+                            </p>
+                            <p className="mt-1 text-xs capitalize text-slate-400">{profile.role}</p>
+                          </div>
+                          <button
+                            className="shrink-0 rounded-lg border border-red-900 px-3 py-1.5 text-xs text-red-300 hover:bg-red-950/60"
+                            onClick={() => void deleteProfile(profile)}
+                            type="button"
+                          >
+                            Delete
+                          </button>
+                        </li>
+                      ))}
+                  </ul>
+                ) : (
+                  <p className="mt-3 text-sm text-slate-400">No students or tutors have been added.</p>
                 )}
               </section>
             </div>
@@ -417,7 +738,7 @@ export default function AdminDashboard() {
                       ? profileById.get(section.tutor_id)
                       : null;
                     return (
-                      <li key={section.id} className="grid gap-3 py-4 sm:grid-cols-2">
+                      <li key={section.id} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
                         <div className="min-w-0">
                           <p className="truncate font-medium">{course?.name ?? "Course unavailable"}</p>
                           <p className="mt-1 break-all text-sm text-slate-400">
@@ -444,6 +765,13 @@ export default function AdminDashboard() {
                             ))}
                           </select>
                         </label>
+                        <button
+                          className="self-end rounded-lg border border-red-900 px-3 py-2 text-xs text-red-300 hover:bg-red-950/60"
+                          onClick={() => void deleteAssignment(section)}
+                          type="button"
+                        >
+                          Delete assignment
+                        </button>
                       </li>
                     );
                   })}
