@@ -44,6 +44,7 @@ export default function AdminDashboard() {
   const [isSavingCourse, setIsSavingCourse] = useState(false);
   const [isAssigningStudent, setIsAssigningStudent] = useState(false);
   const [isCreatingProfile, setIsCreatingProfile] = useState(false);
+  const [isSendingInvitation, setIsSendingInvitation] = useState(false);
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [selectedCourseId, setSelectedCourseId] = useState("");
@@ -51,6 +52,9 @@ export default function AdminDashboard() {
   const [newUserEmail, setNewUserEmail] = useState("");
   const [newUserRole, setNewUserRole] = useState<ProfileRole>("student");
   const [newUserCourseId, setNewUserCourseId] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<ProfileRole>("student");
+  const [inviteCourseId, setInviteCourseId] = useState("");
   const [requestCourseIds, setRequestCourseIds] = useState<Record<string, string>>({});
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -299,6 +303,95 @@ export default function AdminDashboard() {
     }
   }
 
+  async function sendInvitation(
+    email: string,
+    role: ProfileRole,
+    courseId: string,
+    resend = false,
+  ): Promise<"sent" | "invite_pending" | "account_exists"> {
+    const supabase = getSupabaseBrowserClient();
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+    if (sessionError) {
+      throw new Error(`Unable to verify your sign-in: ${sessionError.message}`);
+    }
+    if (!session?.access_token) {
+      throw new Error("Sign in again as an administrator to send invitations.");
+    }
+
+    const response = await fetch("/api/admin/invitations", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        role,
+        courseId: courseId || null,
+        resend,
+      }),
+    });
+    const result = await response.json() as {
+      status?: string;
+      error?: string;
+    };
+    if (!response.ok) {
+      throw new Error(result.error ?? "Unable to send the invitation.");
+    }
+    if (
+      result.status !== "sent" &&
+      result.status !== "invite_pending" &&
+      result.status !== "account_exists"
+    ) {
+      throw new Error("The invitation service returned an unexpected response.");
+    }
+    return result.status;
+  }
+
+  async function inviteUser(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
+    setIsSendingInvitation(true);
+
+    try {
+      let result = await sendInvitation(inviteEmail, inviteRole, inviteCourseId);
+      if (result === "account_exists") {
+        setErrorMessage("An account with this email already exists. Nothing was changed.");
+        return;
+      }
+      if (result === "invite_pending") {
+        if (!window.confirm(
+          `An invitation to ${inviteEmail.trim()} is still pending. Send another invitation email?`,
+        )) {
+          return;
+        }
+        result = await sendInvitation(inviteEmail, inviteRole, inviteCourseId, true);
+        if (result === "account_exists") {
+          setErrorMessage("An account with this email already exists. Nothing was changed.");
+          return;
+        }
+        if (result === "invite_pending") {
+          throw new Error("The invitation is still pending. Try again in a moment.");
+        }
+      }
+
+      setInviteEmail("");
+      setInviteCourseId("");
+      setSuccessMessage("Invitation email sent. The account and course assignment will be set up when the user accepts.");
+    } catch (error: unknown) {
+      console.error("Unable to send account invitation", error);
+      setErrorMessage(
+        error instanceof Error ? error.message : "Unable to send the invitation.",
+      );
+    } finally {
+      setIsSendingInvitation(false);
+    }
+  }
+
   async function deleteProfile(profile: AdminProfile): Promise<void> {
     if (!data || profile.role === "admin") {
       return;
@@ -457,22 +550,22 @@ export default function AdminDashboard() {
           <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
             <div className="space-y-6">
               <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <h2 className="text-lg font-semibold">Add a student or tutor</h2>
+                <h2 className="text-lg font-semibold">Invite a new student or tutor</h2>
                 <p className="mt-1 text-sm text-slate-400">
-                  The user must sign in first. You can add an account here even if they have not sent a request.
+                  Send an automated invitation email. The account and optional course assignment are created after the user accepts.
                 </p>
-                <form className="mt-4 space-y-3" onSubmit={(event) => void addUser(event)}>
+                <form className="mt-4 space-y-3" onSubmit={(event) => void inviteUser(event)}>
                   <label className="block text-sm text-slate-300" htmlFor="new-user-email">
-                    User email
+                    Email
                   </label>
                   <input
                     autoComplete="email"
                     className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
                     id="new-user-email"
-                    onChange={(event) => setNewUserEmail(event.target.value)}
+                    onChange={(event) => setInviteEmail(event.target.value)}
                     required
                     type="email"
-                    value={newUserEmail}
+                    value={inviteEmail}
                   />
                   <label className="block text-sm text-slate-300" htmlFor="new-user-role">
                     Account type
@@ -480,6 +573,72 @@ export default function AdminDashboard() {
                   <select
                     className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
                     id="new-user-role"
+                    onChange={(event) => {
+                      const role = event.target.value;
+                      if (isProfileRole(role)) {
+                        setInviteRole(role);
+                        if (role === "tutor") {
+                          setInviteCourseId("");
+                        }
+                      }
+                    }}
+                    value={inviteRole}
+                  >
+                    <option value="student">Student</option>
+                    <option value="tutor">Tutor</option>
+                  </select>
+                  {inviteRole === "student" && (
+                    <>
+                      <label className="block text-sm text-slate-300" htmlFor="new-user-course">
+                        Course (optional)
+                      </label>
+                      <select
+                        className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                        id="new-user-course"
+                        onChange={(event) => setInviteCourseId(event.target.value)}
+                        value={inviteCourseId}
+                      >
+                        <option value="">Do not assign a course yet</option>
+                        {data.courses.map((course) => (
+                          <option key={course.id} value={course.id}>{course.name}</option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+                  <button
+                    className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50"
+                    disabled={isSendingInvitation || !inviteEmail.trim()}
+                    type="submit"
+                  >
+                    {isSendingInvitation ? "Sending..." : `Send ${inviteRole} invitation`}
+                  </button>
+                </form>
+              </section>
+
+              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
+                <h2 className="text-lg font-semibold">Add an existing account</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  Use this for someone who already has a sign-in account. They do not need to submit an account request.
+                </p>
+                <form className="mt-4 space-y-3" onSubmit={(event) => void addUser(event)}>
+                  <label className="block text-sm text-slate-300" htmlFor="existing-user-email">
+                    User email
+                  </label>
+                  <input
+                    autoComplete="email"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    id="existing-user-email"
+                    onChange={(event) => setNewUserEmail(event.target.value)}
+                    required
+                    type="email"
+                    value={newUserEmail}
+                  />
+                  <label className="block text-sm text-slate-300" htmlFor="existing-user-role">
+                    Account type
+                  </label>
+                  <select
+                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    id="existing-user-role"
                     onChange={(event) => {
                       const role = event.target.value;
                       if (isProfileRole(role)) {
@@ -496,12 +655,12 @@ export default function AdminDashboard() {
                   </select>
                   {newUserRole === "student" && (
                     <>
-                      <label className="block text-sm text-slate-300" htmlFor="new-user-course">
+                      <label className="block text-sm text-slate-300" htmlFor="existing-user-course">
                         Course (optional)
                       </label>
                       <select
                         className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-                        id="new-user-course"
+                        id="existing-user-course"
                         onChange={(event) => setNewUserCourseId(event.target.value)}
                         value={newUserCourseId}
                       >

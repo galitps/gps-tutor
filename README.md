@@ -78,12 +78,23 @@ sign-in, and the session title comes from the selected course. The database
 policies restrict access to the student and assigned tutor for that section.
 Existing Auth users retain their current profile roles; administrators must
 assign courses and tutors before student/tutor accounts can enter sessions.
-Administrators can add signed-in users as students or tutors, create a student
-with an optional course assignment, review account requests and their messages,
-and delete users, courses, or course assignments. Deleting a user warns about
-their assignments and removes those assignments and their session messages.
-New users can continue with Google and submit a message to the administrator;
-their account becomes a student or tutor only after the administrator adds it.
+Administrators can invite new students or tutors by email, optionally assign a
+course to an invited student, add existing signed-in users, review account
+requests and their messages, and delete users, courses, or course assignments.
+Invited users receive an automated Supabase Auth invitation email. Their profile
+and any selected course assignment are created after they accept the invitation
+and return to the app. If an invitation is still pending, the administrator can
+choose to send another; an existing account is reported without changes.
+Configure a production SMTP provider under **Authentication → SMTP Settings**
+and customize the **Invite user** template under **Authentication → Email
+Templates**. Add the deployed app's `/auth/callback` URL and local
+`http://localhost:3000/auth/callback` to Supabase's allowed redirect URLs. Set
+`SUPABASE_SERVICE_ROLE_KEY` as a server-only deployment environment variable;
+never expose it to client-side code. Optionally set `NEXT_PUBLIC_SITE_URL` to
+the app's canonical origin so invitations use the correct callback domain.
+New users can also continue with Google and submit a message to the
+administrator; their account becomes a student or tutor only after the
+administrator adds it.
 To use two accounts at the same time, sign in from separate browser profiles;
 tabs in the same browser profile share the same Supabase session. Alternatively,
 sign out before switching accounts.

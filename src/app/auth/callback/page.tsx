@@ -17,7 +17,7 @@ function isUserRole(role: string): role is UserRole {
 export default function AuthCallbackPage() {
   const router = useRouter();
   const [status, setStatus] = useState<CallbackStatus>("checking");
-  const [message, setMessage] = useState("Verifying your Google sign-in...");
+  const [message, setMessage] = useState("Verifying your sign-in...");
   const [email, setEmail] = useState("");
   const [signedInRole, setSignedInRole] = useState<SignInRole | null>(null);
   const [onboardingMessage, setOnboardingMessage] = useState("");
@@ -32,7 +32,7 @@ export default function AuthCallbackPage() {
       const providerError = params.get("error_description") ?? params.get("error");
 
       if (providerError) {
-        throw new Error(`Google sign-in was not completed: ${providerError}`);
+        throw new Error(`Sign-in was not completed: ${providerError}`);
       }
 
       const selectedRole = params.get("role");
@@ -55,8 +55,24 @@ export default function AuthCallbackPage() {
       }
       if (!session?.user) {
         throw new Error(
-          "Google did not return an active sign-in session. Please check the Supabase Google provider and redirect URL settings.",
+          "The sign-in provider did not return an active session. Please check the Supabase provider and redirect URL settings.",
         );
+      }
+
+      if (session.user.user_metadata?.gps_tutor_admin_invite === true) {
+        const acceptanceResponse = await fetch("/api/invitations/accept", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        });
+        const acceptance = await acceptanceResponse.json() as {
+          status?: string;
+          error?: string;
+        };
+        if (!acceptanceResponse.ok || acceptance.status !== "accepted") {
+          throw new Error(acceptance.error ?? "Unable to finish setting up your invited account.");
+        }
       }
 
       const { data: profile, error: profileError } = await supabase
