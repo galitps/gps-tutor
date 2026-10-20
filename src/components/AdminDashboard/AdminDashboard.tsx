@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import Link from "next/link";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { clearLoginMode, getLoginMode } from "@/lib/auth/login-mode";
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
     };
   }, []);
 
-  async function createCourse(event: FormEvent<HTMLFormElement>): Promise<void> {
+  async function createCourse(event: SubmitEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (!data) {
       return;
@@ -201,7 +201,7 @@ export default function AdminDashboard() {
     }
   }
 
-  async function assignStudent(event: FormEvent<HTMLFormElement>): Promise<void> {
+  async function assignStudent(event: SubmitEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (!selectedCourseId || !selectedStudentId) {
       return;
@@ -295,7 +295,7 @@ export default function AdminDashboard() {
     }
   }
 
-  async function addUser(event: FormEvent<HTMLFormElement>): Promise<void> {
+  async function addUser(event: SubmitEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (await createProfile(newUserEmail, newUserRole, newUserCourseId)) {
       setNewUserEmail("");
@@ -351,7 +351,7 @@ export default function AdminDashboard() {
     return result.status;
   }
 
-  async function inviteUser(event: FormEvent<HTMLFormElement>): Promise<void> {
+  async function inviteUser(event: SubmitEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");

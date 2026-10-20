@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type SubmitEvent } from "react";
 import Link from "next/link";
 import { Send } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -214,7 +214,7 @@ export default function SessionChat({
     };
   }, [sessionId, sessionRole]);
 
-  async function handleSend(event: FormEvent<HTMLFormElement>) {
+  async function handleSend(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const content = draft.trim();
     if (!content || !userId || !role || connectionStatus !== "connected") {
