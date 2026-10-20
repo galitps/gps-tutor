@@ -1,5 +1,7 @@
 "use client";
 
+
+import styles from "./PrintButton.module.css";
 import { Printer } from "lucide-react";
 
 type PrintableDisplay = "math-canvas" | "whiteboard" | "chat";
@@ -32,7 +34,7 @@ export default function PrintButton({
   return (
     <button
       aria-label={`Print ${label}`}
-      className="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-sky-700 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-sky-600"
+      className={styles.utility_fbe081c5}
       data-print-hide
       onClick={handlePrint}
       title={`Print ${label}`}

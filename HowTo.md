@@ -43,11 +43,12 @@ declare global {
 
 export default function MathCanvas() {
   const calculatorRef = useRef<HTMLDivElement>(null);
+  const demoKey = "dcb31709b452b149dc269b578d5367f0";
 
   useEffect(() => {
     // Load Desmos Script dynamically
     const script = document.createElement("script");
-    script.src = "https://www.desmos.com/api/v1.9/calculator.js?apiKey=dcb31709b452b149dc269b578d5367f0";
+    script.src = "https://www.desmos.com/api/v1.9/calculator.js?apiKey=" + demoKey;
     script.async = true;
     script.onload = () => {
       if (calculatorRef.current && window.Desmos) {

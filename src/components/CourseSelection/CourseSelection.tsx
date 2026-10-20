@@ -1,5 +1,7 @@
 "use client";
 
+
+import styles from "./CourseSelection.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -156,40 +158,40 @@ export default function CourseSelection() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-5 py-12 text-slate-100">
-      <section className="w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 p-6 sm:p-10">
-        <p className="text-sm font-semibold uppercase tracking-widest text-sky-300">
+    <main className={styles.utility_066ade19}>
+      <section className={styles.utility_2db3d385}>
+        <p className={styles.utility_2c8d53d4}>
           GPS Tutor
         </p>
-        <h1 className="mt-3 text-2xl font-semibold">Select a course</h1>
-        <p className="mt-2 text-sm text-slate-400">
+        <h1 className={styles.utility_3f306c6a}>Select a course</h1>
+        <p className={styles.utility_4f37fcfe}>
           You can only enter a course section assigned to your account.
         </p>
 
         {isLoading ? (
-          <p aria-live="polite" className="mt-8 text-sm text-slate-300" role="status">
+          <p aria-live="polite" className={styles.utility_834b8477} role="status">
             Loading your course assignments...
           </p>
         ) : errorMessage ? (
-          <div className="mt-6">
-            <p className="rounded-lg bg-red-950/60 p-3 text-sm text-red-200" role="alert">
+          <div className={styles.utility_31f25533}>
+            <p className={styles.utility_d8f13a23} role="alert">
               {errorMessage}
             </p>
-            <Link className="mt-4 inline-block text-sm text-sky-300" href="/">
+            <Link className={styles.utility_4b612a7d} href="/">
               Return to sign in
             </Link>
           </div>
         ) : options.length ? (
-          <ul className="mt-8 space-y-3">
+          <ul className={styles.utility_54a77f7e}>
             {options.map((option) => (
               <li key={option.id}>
                 <Link
-                  className="block rounded-xl border border-slate-700 bg-slate-950/60 p-4 transition hover:border-sky-500 hover:bg-slate-800"
+                  className={styles.utility_c8bcd5a6}
                   href={`/session/${option.id}`}
                 >
-                  <span className="block font-medium">{option.courseName}</span>
+                  <span className={styles.utility_a27bffaa}>{option.courseName}</span>
                   {role === "tutor" && (
-                    <span className="mt-1 block text-sm text-slate-400">
+                    <span className={styles.utility_39229847}>
                       Student: {option.studentEmail ?? "email unavailable"}
                     </span>
                   )}
@@ -198,18 +200,18 @@ export default function CourseSelection() {
             ))}
           </ul>
         ) : (
-          <div className="mt-8 rounded-xl border border-slate-700 bg-slate-950/60 p-4">
-            <p className="text-sm text-slate-200">
+          <div className={styles.utility_d9a59e1c}>
+            <p className={styles.utility_0b5e6ab6}>
               No courses are assigned to your account yet.
             </p>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className={styles.utility_fdc10ac3}>
               Ask an administrator to assign you to a course section.
             </p>
           </div>
         )}
 
         <button
-          className="mt-8 rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800"
+          className={styles.utility_7c69777b}
           onClick={() => void signOut()}
           type="button"
         >

@@ -1,5 +1,7 @@
 "use client";
 
+
+import styles from "./AdminDashboard.module.css";
 import { useEffect, useState, type SubmitEvent } from "react";
 import Link from "next/link";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -510,20 +512,20 @@ export default function AdminDashboard() {
   const profileById = new Map(data?.profiles.map((profile) => [profile.id, profile]) ?? []);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:px-8">
-      <div className="mx-auto max-w-6xl">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-5">
+    <main className={styles.utility_eaf5adca}>
+      <div className={styles.utility_adc5ca27}>
+        <header className={styles.utility_cbd9f2f1}>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-widest text-sky-300">
+            <p className={styles.utility_2c8d53d4}>
               GPS Tutor administration
             </p>
-            <h1 className="mt-2 text-2xl font-semibold">Manage users and courses</h1>
-            <p className="mt-1 text-sm text-slate-400">
+            <h1 className={styles.utility_ca837c1f}>Manage users and courses</h1>
+            <p className={styles.utility_fdc10ac3}>
               Admin accounts cannot enter tutoring sessions. Sign out and sign in as a tutor to tutor a student.
             </p>
           </div>
           <button
-            className="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800"
+            className={styles.utility_6561ade5}
             onClick={() => void signOut()}
             type="button"
           >
@@ -532,46 +534,46 @@ export default function AdminDashboard() {
         </header>
 
         {errorMessage && (
-          <p className="mt-5 rounded-lg bg-red-950/60 p-3 text-sm text-red-200" role="alert">
+          <p className={styles.utility_c037e214} role="alert">
             {errorMessage}
           </p>
         )}
         {successMessage && (
-          <p className="mt-5 rounded-lg bg-emerald-950/60 p-3 text-sm text-emerald-200" role="status">
+          <p className={styles.utility_62959d3b} role="status">
             {successMessage}
           </p>
         )}
 
         {isLoading ? (
-          <p aria-live="polite" className="mt-8 text-sm text-slate-300" role="status">
+          <p aria-live="polite" className={styles.utility_834b8477} role="status">
             Loading administration data...
           </p>
         ) : data ? (
-          <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-            <div className="space-y-6">
-              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <h2 className="text-lg font-semibold">Invite a new student or tutor</h2>
-                <p className="mt-1 text-sm text-slate-400">
+          <div className={styles.utility_83a91963}>
+            <div className={styles.utility_b3542e05}>
+              <section className={styles.utility_4504467b}>
+                <h2 className={styles.utility_85884072}>Invite a new student or tutor</h2>
+                <p className={styles.utility_fdc10ac3}>
                   Send an automated invitation email. The account and optional course assignment are created after the user accepts.
                 </p>
-                <form className="mt-4 space-y-3" onSubmit={(event) => void inviteUser(event)}>
-                  <label className="block text-sm text-slate-300" htmlFor="new-user-email">
+                <form className={styles.utility_5383c0c9} onSubmit={(event) => void inviteUser(event)}>
+                  <label className={styles.utility_1cdb1037} htmlFor="new-user-email">
                     Email
                   </label>
                   <input
                     autoComplete="email"
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    className={styles.utility_c6d0cafc}
                     id="new-user-email"
                     onChange={(event) => setInviteEmail(event.target.value)}
                     required
                     type="email"
                     value={inviteEmail}
                   />
-                  <label className="block text-sm text-slate-300" htmlFor="new-user-role">
+                  <label className={styles.utility_1cdb1037} htmlFor="new-user-role">
                     Account type
                   </label>
                   <select
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    className={styles.utility_c6d0cafc}
                     id="new-user-role"
                     onChange={(event) => {
                       const role = event.target.value;
@@ -589,11 +591,11 @@ export default function AdminDashboard() {
                   </select>
                   {inviteRole === "student" && (
                     <>
-                      <label className="block text-sm text-slate-300" htmlFor="new-user-course">
+                      <label className={styles.utility_1cdb1037} htmlFor="new-user-course">
                         Course (optional)
                       </label>
                       <select
-                        className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                        className={styles.utility_c6d0cafc}
                         id="new-user-course"
                         onChange={(event) => setInviteCourseId(event.target.value)}
                         value={inviteCourseId}
@@ -606,7 +608,7 @@ export default function AdminDashboard() {
                     </>
                   )}
                   <button
-                    className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50"
+                    className={styles.utility_afc25fe3}
                     disabled={isSendingInvitation || !inviteEmail.trim()}
                     type="submit"
                   >
@@ -615,29 +617,29 @@ export default function AdminDashboard() {
                 </form>
               </section>
 
-              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <h2 className="text-lg font-semibold">Add an existing account</h2>
-                <p className="mt-1 text-sm text-slate-400">
+              <section className={styles.utility_4504467b}>
+                <h2 className={styles.utility_85884072}>Add an existing account</h2>
+                <p className={styles.utility_fdc10ac3}>
                   Use this for someone who already has a sign-in account. They do not need to submit an account request.
                 </p>
-                <form className="mt-4 space-y-3" onSubmit={(event) => void addUser(event)}>
-                  <label className="block text-sm text-slate-300" htmlFor="existing-user-email">
+                <form className={styles.utility_5383c0c9} onSubmit={(event) => void addUser(event)}>
+                  <label className={styles.utility_1cdb1037} htmlFor="existing-user-email">
                     User email
                   </label>
                   <input
                     autoComplete="email"
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    className={styles.utility_c6d0cafc}
                     id="existing-user-email"
                     onChange={(event) => setNewUserEmail(event.target.value)}
                     required
                     type="email"
                     value={newUserEmail}
                   />
-                  <label className="block text-sm text-slate-300" htmlFor="existing-user-role">
+                  <label className={styles.utility_1cdb1037} htmlFor="existing-user-role">
                     Account type
                   </label>
                   <select
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    className={styles.utility_c6d0cafc}
                     id="existing-user-role"
                     onChange={(event) => {
                       const role = event.target.value;
@@ -655,11 +657,11 @@ export default function AdminDashboard() {
                   </select>
                   {newUserRole === "student" && (
                     <>
-                      <label className="block text-sm text-slate-300" htmlFor="existing-user-course">
+                      <label className={styles.utility_1cdb1037} htmlFor="existing-user-course">
                         Course (optional)
                       </label>
                       <select
-                        className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                        className={styles.utility_c6d0cafc}
                         id="existing-user-course"
                         onChange={(event) => setNewUserCourseId(event.target.value)}
                         value={newUserCourseId}
@@ -672,7 +674,7 @@ export default function AdminDashboard() {
                     </>
                   )}
                   <button
-                    className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50"
+                    className={styles.utility_afc25fe3}
                     disabled={isCreatingProfile || !newUserEmail.trim()}
                     type="submit"
                   >
@@ -681,27 +683,27 @@ export default function AdminDashboard() {
                 </form>
               </section>
 
-              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <h2 className="text-lg font-semibold">New account requests</h2>
-                <p className="mt-1 text-sm text-slate-400">
+              <section className={styles.utility_4504467b}>
+                <h2 className={styles.utility_85884072}>New account requests</h2>
+                <p className={styles.utility_fdc10ac3}>
                   Review the user’s message, then create their account. Assign a course when adding a student.
                 </p>
                 {data.requests.length ? (
-                  <ul className="mt-4 space-y-4">
+                  <ul className={styles.utility_c52b72f5}>
                     {data.requests.map((request) => (
-                      <li key={request.user_id} className="rounded-lg border border-slate-800 p-3">
-                        <p className="break-all font-medium">{request.email}</p>
-                        <p className="mt-1 text-xs uppercase tracking-wide text-sky-300">
+                      <li key={request.user_id} className={styles.utility_a7077373}>
+                        <p className={styles.utility_6ea1cadb}>{request.email}</p>
+                        <p className={styles.utility_3b0e002d}>
                           Requested {request.requested_role}
                         </p>
-                        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-300">
+                        <p className={styles.utility_0ec212a0}>
                           {request.message}
                         </p>
                         {request.requested_role === "student" && (
-                          <label className="mt-3 block text-sm text-slate-300">
+                          <label className={styles.utility_1c5ef6e8}>
                             Course assignment (optional)
                             <select
-                              className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2"
+                              className={styles.utility_22042e41}
                               onChange={(event) =>
                                 setRequestCourseIds((current) => ({
                                   ...current,
@@ -718,7 +720,7 @@ export default function AdminDashboard() {
                           </label>
                         )}
                         <button
-                          className="mt-3 rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50"
+                          className={styles.utility_a57ceea5}
                           disabled={isCreatingProfile}
                           onClick={() =>
                             void createProfile(
@@ -735,29 +737,29 @@ export default function AdminDashboard() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-3 text-sm text-slate-400">There are no pending account requests.</p>
+                  <p className={styles.utility_771662c5}>There are no pending account requests.</p>
                 )}
               </section>
 
-              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <h2 className="text-lg font-semibold">Define a course</h2>
-                <form className="mt-4 space-y-3" onSubmit={(event) => void createCourse(event)}>
-                  <label className="block text-sm text-slate-300" htmlFor="course-name">
+              <section className={styles.utility_4504467b}>
+                <h2 className={styles.utility_85884072}>Define a course</h2>
+                <form className={styles.utility_5383c0c9} onSubmit={(event) => void createCourse(event)}>
+                  <label className={styles.utility_1cdb1037} htmlFor="course-name">
                     Course name
                   </label>
                   <input
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    className={styles.utility_c6d0cafc}
                     id="course-name"
                     maxLength={120}
                     onChange={(event) => setCourseName(event.target.value)}
                     required
                     value={courseName}
                   />
-                  <label className="block text-sm text-slate-300" htmlFor="course-description">
+                  <label className={styles.utility_1cdb1037} htmlFor="course-description">
                     Description (optional)
                   </label>
                   <textarea
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    className={styles.utility_c6d0cafc}
                     id="course-description"
                     maxLength={2000}
                     onChange={(event) => setCourseDescription(event.target.value)}
@@ -765,7 +767,7 @@ export default function AdminDashboard() {
                     value={courseDescription}
                   />
                   <button
-                    className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50"
+                    className={styles.utility_afc25fe3}
                     disabled={isSavingCourse || !courseName.trim()}
                     type="submit"
                   >
@@ -774,17 +776,17 @@ export default function AdminDashboard() {
                 </form>
               </section>
 
-              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <h2 className="text-lg font-semibold">Assign a course to a student</h2>
-                <p className="mt-1 text-sm text-slate-400">
+              <section className={styles.utility_4504467b}>
+                <h2 className={styles.utility_85884072}>Assign a course to a student</h2>
+                <p className={styles.utility_fdc10ac3}>
                   Each student receives a separate section for each course.
                 </p>
-                <form className="mt-4 space-y-3" onSubmit={(event) => void assignStudent(event)}>
-                  <label className="block text-sm text-slate-300" htmlFor="assign-course">
+                <form className={styles.utility_5383c0c9} onSubmit={(event) => void assignStudent(event)}>
+                  <label className={styles.utility_1cdb1037} htmlFor="assign-course">
                     Course
                   </label>
                   <select
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    className={styles.utility_c6d0cafc}
                     id="assign-course"
                     onChange={(event) => setSelectedCourseId(event.target.value)}
                     required
@@ -795,11 +797,11 @@ export default function AdminDashboard() {
                       <option key={course.id} value={course.id}>{course.name}</option>
                     ))}
                   </select>
-                  <label className="block text-sm text-slate-300" htmlFor="assign-student">
+                  <label className={styles.utility_1cdb1037} htmlFor="assign-student">
                     Student
                   </label>
                   <select
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+                    className={styles.utility_c6d0cafc}
                     id="assign-student"
                     onChange={(event) => setSelectedStudentId(event.target.value)}
                     required
@@ -813,7 +815,7 @@ export default function AdminDashboard() {
                     ))}
                   </select>
                   <button
-                    className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50"
+                    className={styles.utility_afc25fe3}
                     disabled={
                       isAssigningStudent ||
                       !selectedCourseId ||
@@ -826,20 +828,20 @@ export default function AdminDashboard() {
                 </form>
               </section>
 
-              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <h2 className="text-lg font-semibold">Courses</h2>
+              <section className={styles.utility_4504467b}>
+                <h2 className={styles.utility_85884072}>Courses</h2>
                 {data.courses.length ? (
-                  <ul className="mt-3 space-y-3">
+                  <ul className={styles.utility_d827a466}>
                     {data.courses.map((course) => (
-                      <li key={course.id} className="flex items-start justify-between gap-3 border-t border-slate-800 pt-3">
-                        <div className="min-w-0">
-                          <p className="font-medium">{course.name}</p>
+                      <li key={course.id} className={styles.utility_1ee340f4}>
+                        <div className={styles.utility_7e0b7cdf}>
+                          <p className={styles.utility_2689f395}>{course.name}</p>
                           {course.description && (
-                            <p className="mt-1 text-sm text-slate-400">{course.description}</p>
+                            <p className={styles.utility_fdc10ac3}>{course.description}</p>
                           )}
                         </div>
                         <button
-                          className="shrink-0 rounded-lg border border-red-900 px-3 py-1.5 text-xs text-red-300 hover:bg-red-950/60"
+                          className={styles.utility_cc6ff7a3}
                           onClick={() => void deleteCourse(course)}
                           type="button"
                         >
@@ -849,26 +851,26 @@ export default function AdminDashboard() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-3 text-sm text-slate-400">No courses have been created.</p>
+                  <p className={styles.utility_771662c5}>No courses have been created.</p>
                 )}
               </section>
 
-              <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <h2 className="text-lg font-semibold">Students and tutors</h2>
+              <section className={styles.utility_4504467b}>
+                <h2 className={styles.utility_85884072}>Students and tutors</h2>
                 {data.profiles.filter(({ role }) => role !== "admin").length ? (
-                  <ul className="mt-3 divide-y divide-slate-800">
+                  <ul className={styles.utility_1858bd21}>
                     {data.profiles
                       .filter(({ role }) => role !== "admin")
                       .map((profile) => (
-                        <li key={profile.id} className="flex items-center justify-between gap-3 py-3">
-                          <div className="min-w-0">
-                            <p className="break-all text-sm font-medium">
+                        <li key={profile.id} className={styles.utility_2bf61eb6}>
+                          <div className={styles.utility_7e0b7cdf}>
+                            <p className={styles.utility_7172a051}>
                               {profile.email ?? profile.id}
                             </p>
-                            <p className="mt-1 text-xs capitalize text-slate-400">{profile.role}</p>
+                            <p className={styles.utility_48608392}>{profile.role}</p>
                           </div>
                           <button
-                            className="shrink-0 rounded-lg border border-red-900 px-3 py-1.5 text-xs text-red-300 hover:bg-red-950/60"
+                            className={styles.utility_cc6ff7a3}
                             onClick={() => void deleteProfile(profile)}
                             type="button"
                           >
@@ -878,18 +880,18 @@ export default function AdminDashboard() {
                       ))}
                   </ul>
                 ) : (
-                  <p className="mt-3 text-sm text-slate-400">No students or tutors have been added.</p>
+                  <p className={styles.utility_771662c5}>No students or tutors have been added.</p>
                 )}
               </section>
             </div>
 
-            <section className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-              <h2 className="text-lg font-semibold">Student course sections</h2>
-              <p className="mt-1 text-sm text-slate-400">
+            <section className={styles.utility_4504467b}>
+              <h2 className={styles.utility_85884072}>Student course sections</h2>
+              <p className={styles.utility_fdc10ac3}>
                 Assign a tutor independently for each student/course combination.
               </p>
               {data.sections.length ? (
-                <ul className="mt-4 divide-y divide-slate-800">
+                <ul className={styles.utility_e0a31eb0}>
                   {data.sections.map((section) => {
                     const course = courseById.get(section.course_id);
                     const student = profileById.get(section.student_id);
@@ -897,20 +899,20 @@ export default function AdminDashboard() {
                       ? profileById.get(section.tutor_id)
                       : null;
                     return (
-                      <li key={section.id} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-                        <div className="min-w-0">
-                          <p className="truncate font-medium">{course?.name ?? "Course unavailable"}</p>
-                          <p className="mt-1 break-all text-sm text-slate-400">
+                      <li key={section.id} className={styles.utility_6cecaf04}>
+                        <div className={styles.utility_7e0b7cdf}>
+                          <p className={styles.utility_aa8a5029}>{course?.name ?? "Course unavailable"}</p>
+                          <p className={styles.utility_ee84350e}>
                             Student: {student?.email ?? "email unavailable"}
                           </p>
-                          <p className="mt-1 break-all text-xs text-slate-500">
+                          <p className={styles.utility_74b8c061}>
                             Tutor: {tutor?.email ?? "unassigned"}
                           </p>
                         </div>
-                        <label className="text-sm text-slate-300">
+                        <label className={styles.utility_d3a0966d}>
                           Assign tutor
                           <select
-                            className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2"
+                            className={styles.utility_22042e41}
                             onChange={(event) =>
                               void assignTutor(section.id, event.target.value || null)
                             }
@@ -925,7 +927,7 @@ export default function AdminDashboard() {
                           </select>
                         </label>
                         <button
-                          className="self-end rounded-lg border border-red-900 px-3 py-2 text-xs text-red-300 hover:bg-red-950/60"
+                          className={styles.utility_ed9e7c2c}
                           onClick={() => void deleteAssignment(section)}
                           type="button"
                         >
@@ -936,15 +938,15 @@ export default function AdminDashboard() {
                   })}
                 </ul>
               ) : (
-                <p className="mt-5 text-sm text-slate-400">
+                <p className={styles.utility_25967cd7}>
                   No student sections yet. Create one by assigning a course to a student.
                 </p>
               )}
             </section>
           </div>
         ) : (
-          <div className="mt-8">
-            <Link className="text-sm text-sky-300" href="/">Return to sign in</Link>
+          <div className={styles.utility_4e5d2af5}>
+            <Link className={styles.utility_59ad6d1d} href="/">Return to sign in</Link>
           </div>
         )}
       </div>

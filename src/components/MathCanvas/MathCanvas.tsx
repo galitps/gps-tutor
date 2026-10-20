@@ -728,9 +728,9 @@ export default function MathCanvas({
       );
       if (!script) {
         script = document.createElement("script");
+        const demoKey = "dcb31709b452b149dc269b578d5367f0";
         const apiKey =
-          process.env.NEXT_PUBLIC_DESMOS_API_KEY ||
-          "dcb31709b452b149dc269b578d5367f0";
+          process.env.NEXT_PUBLIC_DESMOS_API_KEY || demoKey;
         script.src = `https://www.desmos.com/api/v1.9/calculator.js?apiKey=${apiKey}`;
         script.async = true;
         script.dataset.desmosCalculator = "true";
@@ -808,12 +808,12 @@ export default function MathCanvas({
 
   return (
     <div
-      className={`${styles.container} relative`}
+      className={[styles.container, styles.utility_d89972fe].filter(Boolean).join(" ")}
       data-printable="math-canvas"
     >
       {(isLoading || errorMessage) && (
         <div
-          className={`${styles.statusOverlay} z-30 ${errorMessage ? "text-red-300" : ""}`}
+          className={[styles.statusOverlay, styles.utility_0f2fff0a, (errorMessage ? styles.utility_1529a707 : "")].filter(Boolean).join(" ")}
           data-print-hide
           role={errorMessage ? "alert" : "status"}
         >
@@ -824,22 +824,21 @@ export default function MathCanvas({
         ref={calculatorRef}
         className={styles.desmosWrapper}
         id="calculator"
-        style={{ width: "100%", height: "100%" }}
       />
       {!isEditing && !isLoading && (
         <div
           aria-label="Graph editing is locked"
-          className="absolute inset-0 z-10 bg-slate-950/5"
+          className={styles.utility_21617f24}
           role="presentation"
           data-print-hide
         />
       )}
       <div
-        className="absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md bg-slate-950/90 p-2 shadow"
+        className={styles.utility_425c0bf0}
         data-print-hide
       >
         <button
-          className="rounded bg-sky-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+          className={styles.utility_c068dff9}
           disabled={
             isLoading ||
             !role ||
@@ -860,11 +859,11 @@ export default function MathCanvas({
                   : `${lockOwnerRole ?? "Participant"} editing`
                 : "Take edit control"}
         </button>
-        <span aria-live="polite" className="text-[10px] text-slate-200">
+        <span aria-live="polite" className={styles.utility_e0ef08ef}>
           {lockLabel}
         </span>
       </div>
-      <div className="absolute right-3 top-3 z-20" data-print-hide>
+      <div className={styles.utility_8a3a5e43} data-print-hide>
         <PrintButton display="math-canvas" label="Math Canvas" />
       </div>
     </div>

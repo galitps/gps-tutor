@@ -1,0 +1,41 @@
+@reference "../../app/globals.css";
+
+/* flex h-full min-h-0 min-w-0 flex-col gap-2 */
+.utility_03d7e189 {
+  @apply flex h-full min-h-0 min-w-0 flex-col gap-2;
+}
+
+/* flex shrink-0 items-center gap-1 */
+.utility_ba2fb302 {
+  @apply flex shrink-0 items-center gap-1;
+}
+
+/* inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium */
+.utility_29d6713b {
+  @apply inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium;
+}
+
+/* bg-sky-800 text-white */
+.utility_fd21abc5 {
+  @apply bg-sky-800 text-white;
+}
+
+/* bg-slate-800 text-slate-300 hover:bg-slate-700 */
+.utility_5454d762 {
+  @apply bg-slate-800 text-slate-300 hover:bg-slate-700;
+}
+
+/* flex */
+.utility_60fbb771 {
+  @apply flex;
+}
+
+/* hidden */
+.utility_99d72c7f {
+  @apply hidden;
+}
+
+/* min-h-0 min-w-0 flex-1 flex-col */
+.utility_8b5f63d2 {
+  @apply min-h-0 min-w-0 flex-1 flex-col;
+}

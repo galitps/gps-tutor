@@ -1,0 +1,11 @@
+@reference "./globals.css";
+
+/* h-full antialiased */
+.utility_4386e19f {
+  @apply h-full antialiased;
+}
+
+/* min-h-full flex flex-col */
+.utility_54900b22 {
+  @apply min-h-full flex flex-col;
+}

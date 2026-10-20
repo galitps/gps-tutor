@@ -1,5 +1,7 @@
 "use client";
 
+
+import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -132,7 +134,7 @@ export default function SessionPage() {
 
   if (isLoading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-200">
+      <main className={styles.utility_a88a3f2d}>
         <p aria-live="polite" role="status">Loading your tutoring session...</p>
       </main>
     );
@@ -140,13 +142,13 @@ export default function SessionPage() {
 
   if (!session) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-5 text-slate-100">
-        <section className="w-full max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6">
-          <h1 className="text-xl font-semibold">Unable to open session</h1>
-          <p className="mt-3 text-sm text-red-200" role="alert">
+      <main className={styles.utility_5134b564}>
+        <section className={styles.utility_e6df4f4e}>
+          <h1 className={styles.utility_08c50e80}>Unable to open session</h1>
+          <p className={styles.utility_7cc012b9} role="alert">
             {errorMessage || "The requested tutoring session is unavailable."}
           </p>
-          <Link className="mt-5 inline-block text-sm text-sky-300" href="/">
+          <Link className={styles.utility_a48e708d} href="/">
             Return to sign in
           </Link>
         </section>
@@ -155,23 +157,23 @@ export default function SessionPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950 font-sans text-slate-100">
-      <header className="flex h-14 shrink-0 items-center border-b border-slate-800 bg-slate-900/50 px-6">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="h-3 w-3 shrink-0 animate-pulse rounded-full bg-emerald-500" />
-          <h1 className="truncate text-sm font-semibold text-slate-200 sm:text-base">
+    <div className={styles.utility_a6fb0fbc}>
+      <header className={styles.utility_51693a83}>
+        <div className={styles.utility_be1287d2}>
+          <div className={styles.utility_9b979c59} />
+          <h1 className={styles.utility_17aacdb0}>
             {session.courseName}
           </h1>
         </div>
       </header>
 
       <SessionParticipantsProvider>
-        <main className="grid h-[calc(100vh-3.5rem)] flex-1 grid-cols-1 gap-4 overflow-hidden p-4 lg:grid-cols-12">
-          <section className="flex h-full min-w-0 flex-col lg:col-span-8">
+        <main className={styles.utility_5c265bec}>
+          <section className={styles.utility_174c3811}>
             <SessionWorkspace sessionId={session.id} sessionRole={session.role} />
           </section>
-          <section className="flex h-full min-h-0 flex-col gap-4 lg:col-span-4">
-            <div className="h-48 shrink-0">
+          <section className={styles.utility_4c8c165b}>
+            <div className={styles.utility_65b74a91}>
               <VideoInterface sessionId={session.id} sessionRole={session.role} />
             </div>
             <SessionChat sessionId={session.id} sessionRole={session.role} />

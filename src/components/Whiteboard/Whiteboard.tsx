@@ -50,6 +50,16 @@ const colors = [
   "#2563eb",
   "#9333ea",
 ];
+const colorStyles: Record<string, string> = {
+  "#111827": styles.swatchSlate,
+  "#dc2626": styles.swatchRed,
+  "#ea580c": styles.swatchOrange,
+  "#ca8a04": styles.swatchYellow,
+  "#16a34a": styles.swatchGreen,
+  "#0891b2": styles.swatchCyan,
+  "#2563eb": styles.swatchBlue,
+  "#9333ea": styles.swatchPurple,
+};
 const tools: { value: DrawingTool; label: string; Icon: typeof Pencil }[] = [
   { value: "pen", label: "Pen", Icon: Pencil },
   { value: "line", label: "Line", Icon: Minus },
@@ -577,24 +587,20 @@ export default function Whiteboard({
 
   return (
     <section
-      className="relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-300 bg-white"
+      className={styles.utility_cb029dc6}
       data-printable="whiteboard"
     >
       <div
-        className="absolute left-2 right-2 top-2 z-10 flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/95 p-2 shadow-sm"
+        className={styles.utility_a4875056}
         data-print-hide
       >
-        <div aria-label="Drawing tools" className="flex items-center gap-1">
+        <div aria-label="Drawing tools" className={styles.utility_41681120}>
           {tools.map(({ value, label, Icon }) => (
             <button
               key={value}
               aria-label={label}
               aria-pressed={selectedTool === value}
-              className={`rounded-md p-2 ${
-                selectedTool === value
-                  ? "bg-sky-100 text-sky-800"
-                  : "text-slate-600 hover:bg-slate-200"
-              }`}
+              className={[styles.utility_f7e59ee7, (selectedTool === value ? styles.utility_1b73394d : styles.utility_bc85acf1)].filter(Boolean).join(" ")}
               onClick={() => setSelectedTool(value)}
               title={label}
               type="button"
@@ -604,31 +610,26 @@ export default function Whiteboard({
           ))}
         </div>
 
-        <div className="mx-1 h-6 border-l border-slate-300" />
+        <div className={styles.utility_7f8ae50f} />
 
-        <div aria-label="Drawing colors" className="flex items-center gap-1">
+        <div aria-label="Drawing colors" className={styles.utility_41681120}>
           {colors.map((color) => (
             <button
               key={color}
               aria-label={`Use ${color} drawing color`}
               aria-pressed={selectedColor === color}
-              className={`h-6 w-6 rounded-full border-2 ${
-                selectedColor === color
-                  ? "border-sky-600 ring-2 ring-sky-200"
-                  : "border-white shadow ring-1 ring-slate-300"
-              }`}
+              className={[styles.utility_2400c039, colorStyles[color], (selectedColor === color ? styles.utility_ff6ae561 : styles.utility_0d6ba20a)].filter(Boolean).join(" ")}
               onClick={() => setSelectedColor(color)}
-              style={{ backgroundColor: color }}
               type="button"
             />
           ))}
         </div>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className={styles.utility_eb80f14c}>
           <PrintButton display="whiteboard" label="Whiteboard" />
           <button
             aria-label="Undo last drawing"
-            className="rounded-md p-2 text-slate-600 hover:bg-slate-200 disabled:opacity-40"
+            className={styles.utility_0c49a6eb}
             disabled={!items.length || !isReady}
             onClick={() => void undoLast()}
             title="Undo last drawing"
@@ -638,7 +639,7 @@ export default function Whiteboard({
           </button>
           <button
             aria-label="Clear whiteboard"
-            className="rounded-md p-2 text-slate-600 hover:bg-red-100 hover:text-red-700 disabled:opacity-40"
+            className={styles.utility_13087f49}
             disabled={!items.length || !isReady}
             onClick={() => void clearBoard()}
             title="Clear whiteboard"
@@ -652,7 +653,7 @@ export default function Whiteboard({
       {connectionError && (
         <p
           aria-live="polite"
-          className="absolute left-2 right-2 top-16 z-10 border border-red-200 bg-red-50/95 px-3 py-1 text-xs text-red-700"
+          className={styles.utility_274d850f}
           role="alert"
           data-print-hide
         >
@@ -664,7 +665,7 @@ export default function Whiteboard({
         <svg
           ref={svgRef}
           aria-label="Shared drawing whiteboard"
-          className="h-full w-full touch-none"
+          className={styles.utility_765236cd}
           preserveAspectRatio="none"
           role="application"
           viewBox={`0 0 ${boardWidth} ${boardHeight}`}
@@ -679,7 +680,7 @@ export default function Whiteboard({
         {!isReady && (
           <div
             aria-live="polite"
-            className="pointer-events-none absolute inset-x-0 top-0 bg-white/90 px-3 py-2 text-center text-xs text-slate-500"
+            className={styles.utility_6e818e02}
             role="status"
             data-print-hide
           >

@@ -1,5 +1,7 @@
 "use client";
 
+
+import styles from "./page.module.css";
 import { useEffect, useState, type SubmitEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -220,12 +222,12 @@ export default function AuthCallbackPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-5 py-12 text-slate-900">
-      <section className="w-full max-w-lg rounded-3xl bg-white p-8 shadow-xl shadow-slate-900/5 sm:p-12">
-        <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#386b9a]">
+    <main className={styles.utility_6422a31f}>
+      <section className={styles.utility_237d962d}>
+        <p className={styles.utility_fd8e52c1}>
           GPS Tutor
         </p>
-        <h1 className="mt-3 text-2xl font-semibold tracking-tight">
+        <h1 className={styles.utility_9f26b461}>
           {status === "checking"
             ? "Completing sign-in"
             : status === "success"
@@ -238,21 +240,19 @@ export default function AuthCallbackPage() {
         </h1>
         <p
           aria-live="polite"
-          className={`mt-3 leading-7 ${
-            status === "error" ? "text-red-700" : "text-slate-600"
-          }`}
+          className={[styles.utility_3a11d0a8, (status === "error" ? styles.utility_f3376ad2 : styles.utility_2d6fbf48)].filter(Boolean).join(" ")}
           role={status === "error" ? "alert" : "status"}
         >
           {message}
         </p>
-        {email && <p className="mt-2 break-all text-sm text-slate-500">{email}</p>}
+        {email && <p className={styles.utility_90890890}>{email}</p>}
         {status === "onboarding" && (
-          <form className="mt-6 space-y-4" onSubmit={(event) => void submitOnboardingRequest(event)}>
-            <label className="block text-sm font-medium text-slate-700" htmlFor="onboarding-message">
+          <form className={styles.utility_fad340fd} onSubmit={(event) => void submitOnboardingRequest(event)}>
+            <label className={styles.utility_52a103ff} htmlFor="onboarding-message">
               Message for the administrator
             </label>
             <textarea
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-[#386b9a] focus:ring-4 focus:ring-blue-100"
+              className={styles.utility_62304bff}
               id="onboarding-message"
               maxLength={2000}
               onChange={(event) => setOnboardingMessage(event.target.value)}
@@ -261,12 +261,12 @@ export default function AuthCallbackPage() {
               value={onboardingMessage}
             />
             {requestMessage && (
-              <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+              <p className={styles.utility_2bb5c4b3} role="alert">
                 {requestMessage}
               </p>
             )}
             <button
-              className="w-full rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d] disabled:cursor-not-allowed disabled:opacity-60"
+              className={styles.utility_fe7c6366}
               disabled={isSubmittingRequest || !onboardingMessage.trim()}
               type="submit"
             >
@@ -275,18 +275,18 @@ export default function AuthCallbackPage() {
           </form>
         )}
         {status === "pending" && onboardingMessage && (
-          <blockquote className="mt-5 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+          <blockquote className={styles.utility_73c958f4}>
             {onboardingMessage}
           </blockquote>
         )}
         {status === "pending" && requestMessage && (
-          <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+          <p className={styles.utility_bc230a50} role="alert">
             {requestMessage}
           </p>
         )}
         {status === "pending" && (
           <button
-            className="mt-8 inline-flex rounded-xl border border-slate-200 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50"
+            className={styles.utility_4a6c1735}
             onClick={() => void signOutFromPendingRequest()}
             type="button"
           >
@@ -297,7 +297,7 @@ export default function AuthCallbackPage() {
           status !== "onboarding" &&
           status !== "pending" && (
           <Link
-            className="mt-8 inline-flex rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d]"
+            className={styles.utility_aa895bac}
             href={
               status === "success"
                 ? signedInRole === "admin"

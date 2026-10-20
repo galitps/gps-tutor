@@ -1,3 +1,5 @@
+@reference "../../app/globals.css";
+
 /* MathCanvas.module.css */
 .container {
   position: relative;
@@ -21,4 +23,44 @@
   background-color: rgba(255, 255, 255, 0.9);
   padding: 12px 12px;
   border-radius: 4px;
+}
+
+/* relative */
+.utility_d89972fe {
+  @apply relative;
+}
+
+/* z-30 */
+.utility_0f2fff0a {
+  @apply z-30;
+}
+
+/* text-red-300 */
+.utility_1529a707 {
+  @apply text-red-300;
+}
+
+/* absolute inset-0 z-10 bg-slate-950/5 */
+.utility_21617f24 {
+  @apply absolute inset-0 z-10 bg-slate-950/5;
+}
+
+/* absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md bg-slate-950/90 p-2 shadow */
+.utility_425c0bf0 {
+  @apply absolute left-3 top-3 z-20 flex items-center gap-2 rounded-md bg-slate-950/90 p-2 shadow;
+}
+
+/* rounded bg-sky-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60 */
+.utility_c068dff9 {
+  @apply rounded bg-sky-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+/* text-[10px] text-slate-200 */
+.utility_e0ef08ef {
+  @apply text-[10px] text-slate-200;
+}
+
+/* absolute right-3 top-3 z-20 */
+.utility_8a3a5e43 {
+  @apply absolute right-3 top-3 z-20;
 }

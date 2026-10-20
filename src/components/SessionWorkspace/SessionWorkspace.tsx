@@ -1,5 +1,7 @@
 "use client";
 
+
+import styles from "./SessionWorkspace.module.css";
 import { useState } from "react";
 import { LayoutGrid, PencilRuler } from "lucide-react";
 import MathCanvas from "@/components/MathCanvas/MathCanvas";
@@ -17,20 +19,16 @@ export default function SessionWorkspace({
   const [view, setView] = useState<WorkspaceView>("math");
 
   return (
-    <section className="flex h-full min-h-0 min-w-0 flex-col gap-2">
+    <section className={styles.utility_03d7e189}>
       <div
         aria-label="Session workspace"
-        className="flex shrink-0 items-center gap-1"
+        className={styles.utility_ba2fb302}
         role="tablist"
       >
         <button
           aria-controls="math-canvas-panel"
           aria-selected={view === "math"}
-          className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
-            view === "math"
-              ? "bg-sky-800 text-white"
-              : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-          }`}
+          className={[styles.utility_29d6713b, (view === "math" ? styles.utility_fd21abc5 : styles.utility_5454d762)].filter(Boolean).join(" ")}
           id="math-canvas-tab"
           onClick={() => setView("math")}
           role="tab"
@@ -42,11 +40,7 @@ export default function SessionWorkspace({
         <button
           aria-controls="whiteboard-panel"
           aria-selected={view === "whiteboard"}
-          className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
-            view === "whiteboard"
-              ? "bg-sky-800 text-white"
-              : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-          }`}
+          className={[styles.utility_29d6713b, (view === "whiteboard" ? styles.utility_fd21abc5 : styles.utility_5454d762)].filter(Boolean).join(" ")}
           id="whiteboard-tab"
           onClick={() => setView("whiteboard")}
           role="tab"
@@ -58,7 +52,7 @@ export default function SessionWorkspace({
       </div>
       <div
         aria-labelledby="math-canvas-tab"
-        className={`${view === "math" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col`}
+        className={[(view === "math" ? styles.utility_60fbb771 : styles.utility_99d72c7f), styles.utility_8b5f63d2].filter(Boolean).join(" ")}
         id="math-canvas-panel"
         role="tabpanel"
       >
@@ -66,7 +60,7 @@ export default function SessionWorkspace({
       </div>
       <div
         aria-labelledby="whiteboard-tab"
-        className={`${view === "whiteboard" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col`}
+        className={[(view === "whiteboard" ? styles.utility_60fbb771 : styles.utility_99d72c7f), styles.utility_8b5f63d2].filter(Boolean).join(" ")}
         id="whiteboard-panel"
         role="tabpanel"
       >

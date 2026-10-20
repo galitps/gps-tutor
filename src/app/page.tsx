@@ -1,6 +1,8 @@
 
 "use client";
 
+
+import styles from "./page.module.css";
 import { useState, type SubmitEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -206,52 +208,52 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-5 py-12 text-slate-900">
-      <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-xl shadow-slate-900/5 lg:grid-cols-[1.05fr_0.95fr]">
-        <section className="relative hidden flex-col justify-between overflow-hidden bg-[#142d4e] p-12 text-white lg:flex">
-          <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full border border-white/10" />
-          <div className="absolute -right-12 -top-12 h-56 w-56 rounded-full border border-white/10" />
-          <div className="relative">
-            <div className="mb-12 flex h-20 w-20 items-center justify-center rounded-3xl bg-white/10 text-white shadow-inner shadow-white/10">
-              <CompassRose className="h-16 w-16" />
+    <main className={styles.utility_6422a31f}>
+      <div className={styles.utility_2c617b0f}>
+        <section className={styles.utility_d86c6318}>
+          <div className={styles.utility_967b9113} />
+          <div className={styles.utility_f99f0003} />
+          <div className={styles.utility_d89972fe}>
+            <div className={styles.utility_d1545d78}>
+              <CompassRose className={styles.utility_e9686695} />
             </div>
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-blue-200">
+            <p className={styles.utility_a636643b}>
               GPS Tutor
             </p>
-            <h1 className="max-w-sm text-4xl font-semibold leading-tight tracking-tight">
+            <h1 className={styles.utility_711b2ee1}>
               We help you reach your goals.
             </h1>
-            <p className="mt-5 max-w-sm leading-7 text-blue-100/80">
+            <p className={styles.utility_f907aed3}>
               Sign in to continue your tutoring journey, wherever it takes you.
             </p>
           </div>
         </section>
 
-        <section className="px-6 py-10 sm:px-12 sm:py-14">
-          <div className="mx-auto max-w-md">
-            <div className="mb-8 lg:hidden">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#142d4e] text-white shadow-md shadow-blue-950/20">
-                <CompassRose className="h-14 w-14" />
+        <section className={styles.utility_f32924e4}>
+          <div className={styles.utility_339538ae}>
+            <div className={styles.utility_212e5c20}>
+              <div className={styles.utility_78514bb7}>
+                <CompassRose className={styles.utility_74458003} />
               </div>
-              <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#142d4e]">
+              <p className={styles.utility_1d0aaaa5}>
                 GPS Tutor
               </p>
             </div>
 
             {signedInAs ? (
-              <div className="py-8">
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+              <div className={styles.utility_a1f611f0}>
+                <div className={styles.utility_ccef449f}>
                   <LockKeyhole aria-hidden="true" size={25} />
                 </div>
-                <h2 className="text-2xl font-semibold tracking-tight">
+                <h2 className={styles.utility_57f62819}>
                   You&apos;re signed in
                 </h2>
-                <p className="mt-2 text-slate-600">
+                <p className={styles.utility_576d475d}>
                   Your {signedInAs} account has been verified.
                 </p>
-                <p className="mt-1 break-all text-sm text-slate-500">{email}</p>
+                <p className={styles.utility_f8560c9f}>{email}</p>
                 <Link
-                  className="mt-8 flex w-full justify-center rounded-xl bg-[#183b60] px-4 py-3 font-semibold text-white transition hover:bg-[#102d4d]"
+                  className={styles.utility_27ca8034}
                   href={signedInAs === "admin" ? "/admin" : "/courses"}
                 >
                   {signedInAs === "admin"
@@ -259,7 +261,7 @@ export default function Home() {
                     : "Select a course"}
                 </Link>
                 <button
-                  className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className={styles.utility_3769e728}
                   disabled={isSubmitting}
                   onClick={handleSignOut}
                   type="button"
@@ -269,30 +271,26 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <p className="text-sm font-medium text-[#386b9a]">
+                <p className={styles.utility_63473a2c}>
                   WELCOME BACK
                 </p>
-                <h2 className="mt-2 text-3xl font-semibold tracking-tight">
+                <h2 className={styles.utility_bf4fe5d1}>
                   Sign in to your account
                 </h2>
-                <p className="mt-2 text-slate-600">
+                <p className={styles.utility_576d475d}>
                   Choose your account type, then enter your details.
                 </p>
 
                 <div
                   aria-label="Sign-in account type"
-                  className="mt-8 grid grid-cols-3 gap-2"
+                  className={styles.utility_e1b71ba5}
                   role="group"
                 >
                   {signInRoles.map(({ value, label, Icon }) => (
                     <button
                       key={value}
                       aria-pressed={role === value}
-                      className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 font-medium transition ${
-                        role === value
-                          ? "border-[#386b9a] bg-blue-50 text-[#204c76]"
-                          : "border-slate-200 text-slate-600 hover:bg-slate-50"
-                      } disabled:cursor-not-allowed disabled:opacity-60`}
+                      className={[styles.utility_25a69ae7, (role === value ? styles.utility_421b5f48 : styles.utility_653d7b0d), styles.utility_bd85d7d1].filter(Boolean).join(" ")}
                       onClick={() => setRole(value)}
                       disabled={isSubmitting}
                       type="button"
@@ -304,12 +302,12 @@ export default function Home() {
                 </div>
 
                 <button
-                  className="mt-7 flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className={styles.utility_768e43a0}
                   disabled={isSubmitting}
                   onClick={handleGoogleSignIn}
                   type="button"
                 >
-                  <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 48 48">
+                  <svg aria-hidden="true" className={styles.utility_3a33b9b0} viewBox="0 0 48 48">
                     <path
                       fill="#EA4335"
                       d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"
@@ -330,25 +328,25 @@ export default function Home() {
                   {isSubmitting ? "Connecting to Google..." : "Continue with Google"}
                 </button>
 
-                <div className="my-6 flex items-center gap-4">
-                  <span aria-hidden="true" className="h-px flex-1 bg-slate-200" />
-                  <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                <div className={styles.utility_469a2977}>
+                  <span aria-hidden="true" className={styles.utility_5591f064} />
+                  <span className={styles.utility_027d25d0}>
                     or use email
                   </span>
-                  <span aria-hidden="true" className="h-px flex-1 bg-slate-200" />
+                  <span aria-hidden="true" className={styles.utility_5591f064} />
                 </div>
 
-                <form className="space-y-5" onSubmit={handleSubmit}>
+                <form className={styles.utility_b43b4c08} onSubmit={handleSubmit}>
                   <div>
                     <label
-                      className="mb-2 block text-sm font-medium text-slate-700"
+                      className={styles.utility_07241f8b}
                       htmlFor="email"
                     >
                       Email address
                     </label>
                     <input
                       autoComplete="email"
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#386b9a] focus:ring-4 focus:ring-blue-100"
+                      className={styles.utility_c014b89b}
                       id="email"
                       onChange={(event) => setEmail(event.target.value)}
                       placeholder="you@example.com"
@@ -360,14 +358,14 @@ export default function Home() {
                   </div>
                   <div>
                     <label
-                      className="mb-2 block text-sm font-medium text-slate-700"
+                      className={styles.utility_07241f8b}
                       htmlFor="password"
                     >
                       Password
                     </label>
                     <input
                       autoComplete="current-password"
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#386b9a] focus:ring-4 focus:ring-blue-100"
+                      className={styles.utility_c014b89b}
                       id="password"
                       onChange={(event) => setPassword(event.target.value)}
                       placeholder="Enter your password"
@@ -381,7 +379,7 @@ export default function Home() {
                   {errorMessage && (
                     <p
                       aria-live="polite"
-                      className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"
+                      className={styles.utility_2bb5c4b3}
                       role="alert"
                     >
                       {errorMessage}
@@ -389,7 +387,7 @@ export default function Home() {
                   )}
 
                   <button
-                    className="w-full rounded-xl bg-[#183b60] px-4 py-3.5 font-semibold text-white transition hover:bg-[#102d4d] disabled:cursor-not-allowed disabled:opacity-60"
+                    className={styles.utility_a4053609}
                     disabled={isSubmitting}
                     type="submit"
                   >
@@ -397,7 +395,7 @@ export default function Home() {
                   </button>
                 </form>
 
-                <p className="mt-6 text-center text-sm leading-6 text-slate-500">
+                <p className={styles.utility_2101c22c}>
                   New here? Continue with Google to send your administrator an
                   account request.
                 </p>
@@ -407,7 +405,7 @@ export default function Home() {
             {signedInAs && errorMessage && (
               <p
                 aria-live="polite"
-                className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"
+                className={styles.utility_bc230a50}
                 role="alert"
               >
                 {errorMessage}

@@ -14,6 +14,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getIceServers } from "@/lib/webrtc/ice-servers";
 import { useSessionParticipants } from "@/components/SessionParticipants/SessionParticipants";
 import { clearLoginMode } from "@/lib/auth/login-mode";
+import styles from "./VideoInterface.module.css";
 
 type CallRole = "student" | "tutor";
 type CallStatus =
@@ -811,8 +812,8 @@ export default function VideoInterface({
 
   if (!role && callStatus === "error") {
     return (
-      <section className="flex h-full flex-col items-center justify-center rounded-xl border border-slate-800 bg-slate-900 p-3 text-center">
-        <p aria-live="polite" className="text-xs text-red-300" role="alert">
+      <section className={styles.utility_7bd9cb86}>
+        <p aria-live="polite" className={styles.utility_33489aae} role="alert">
           {errorMessage}
         </p>
       </section>
@@ -820,19 +821,17 @@ export default function VideoInterface({
   }
 
   return (
-    <section className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
+    <section className={styles.utility_f3e6ce6e}>
       <p
         aria-live="polite"
-        className={`truncate px-3 pt-2 text-[10px] ${
-          callStatus === "error" ? "text-red-300" : "text-slate-400"
-        }`}
+        className={[styles.utility_415c96d2, (callStatus === "error" ? styles.utility_1529a707 : styles.utility_8d44cef3)].filter(Boolean).join(" ")}
         role={callStatus === "error" ? "alert" : "status"}
         title={callStatusText[callStatus]}
       >
         {callStatusText[callStatus]}
       </p>
 
-      <div className="grid min-h-0 flex-1 grid-cols-2 gap-2 p-2">
+      <div className={styles.utility_69026345}>
         {(["student", "tutor"] as const).map((tileRole) => {
           const isLocal = tileRole === role;
           const stream = isLocal ? localStream : remoteStream;
@@ -840,20 +839,20 @@ export default function VideoInterface({
           return (
             <div
               key={tileRole}
-              className="relative flex min-h-0 items-center justify-center overflow-hidden rounded-lg border border-slate-700/50 bg-slate-800"
+              className={styles.utility_f8b7da2b}
             >
               {stream && !videoOff ? (
                 <video
                   ref={isLocal ? localVideoRef : remoteVideoRef}
                   autoPlay
-                  className={`h-full w-full object-cover ${isLocal ? "" : "scale-x-[-1]"}`}
+                  className={[styles.utility_9f049a30, (isLocal ? "" : styles.utility_76fc8214)].filter(Boolean).join(" ")}
                   muted={isLocal}
                   playsInline
                 />
               ) : (
-                <div className="flex flex-col items-center gap-1 text-slate-500">
-                  <VideoOff aria-hidden="true" className="h-5 w-5" />
-                  <span className="px-1 text-center text-[10px]">
+                <div className={styles.utility_7e67af05}>
+                  <VideoOff aria-hidden="true" className={styles.utility_3a33b9b0} />
+                  <span className={styles.utility_7d2ed93d}>
                     {isLocal && !localStream
                       ? "Camera off"
                       : tileRole === role
@@ -862,7 +861,7 @@ export default function VideoInterface({
                   </span>
                 </div>
               )}
-              <div className="absolute bottom-1 left-1 right-1 truncate rounded bg-slate-950/80 px-1.5 py-1 text-center text-[10px] text-white">
+              <div className={styles.utility_b0b2f4e0}>
                 {participantLabel(tileRole)}
               </div>
             </div>
@@ -870,65 +869,57 @@ export default function VideoInterface({
         })}
       </div>
 
-      <div className="flex h-12 shrink-0 items-center justify-center gap-2 border-t border-slate-800 bg-slate-950 px-2">
+      <div className={styles.utility_a3536e51}>
         <button
           aria-label={isMuted ? "Unmute microphone" : "Mute microphone"}
-          className={`rounded-full p-2 transition disabled:cursor-not-allowed disabled:opacity-40 ${
-            isMuted
-              ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-              : "bg-slate-800 text-slate-200 hover:bg-slate-700"
-          }`}
+          className={[styles.utility_794f783d, (isMuted ? styles.utility_7e9fdc4a : styles.utility_8650cac1)].filter(Boolean).join(" ")}
           disabled={!localStream}
           onClick={toggleMute}
           title={isMuted ? "Unmute microphone" : "Mute microphone"}
           type="button"
         >
-          {isMuted ? <MicOff aria-hidden="true" className="h-4 w-4" /> : <Mic aria-hidden="true" className="h-4 w-4" />}
+          {isMuted ? <MicOff aria-hidden="true" className={styles.utility_a7e4e66f} /> : <Mic aria-hidden="true" className={styles.utility_a7e4e66f} />}
         </button>
 
         <button
           aria-label={isVideoOff ? "Turn camera on" : "Turn camera off"}
-          className={`rounded-full p-2 transition disabled:cursor-not-allowed disabled:opacity-40 ${
-            isVideoOff
-              ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-              : "bg-slate-800 text-slate-200 hover:bg-slate-700"
-          }`}
+          className={[styles.utility_794f783d, (isVideoOff ? styles.utility_7e9fdc4a : styles.utility_8650cac1)].filter(Boolean).join(" ")}
           disabled={!localStream}
           onClick={toggleVideo}
           title={isVideoOff ? "Turn camera on" : "Turn camera off"}
           type="button"
         >
-          {isVideoOff ? <VideoOff aria-hidden="true" className="h-4 w-4" /> : <Video aria-hidden="true" className="h-4 w-4" />}
+          {isVideoOff ? <VideoOff aria-hidden="true" className={styles.utility_a7e4e66f} /> : <Video aria-hidden="true" className={styles.utility_a7e4e66f} />}
         </button>
 
         {!localStream && (
           <button
             aria-label="Start call"
-            className="rounded-full bg-emerald-700 p-2 text-white transition hover:bg-emerald-600 disabled:cursor-wait disabled:opacity-60"
+            className={styles.utility_47bb3102}
             disabled={!role || isStarting || callStatus === "checking"}
             onClick={() => void startCall()}
             title="Start camera and microphone"
             type="button"
           >
             {isStarting ? (
-              <LoaderCircle aria-hidden="true" className="h-4 w-4 animate-spin" />
+              <LoaderCircle aria-hidden="true" className={styles.utility_afd31a31} />
             ) : (
-              <Phone aria-hidden="true" className="h-4 w-4" />
+              <Phone aria-hidden="true" className={styles.utility_a7e4e66f} />
             )}
           </button>
         )}
         <button
           aria-label="End call and sign out"
-          className="rounded-full bg-red-600 p-2 text-white transition hover:bg-red-700 disabled:cursor-wait disabled:opacity-60"
+          className={styles.utility_2e26fd2f}
           disabled={isSigningOut}
           onClick={() => void endCallAndSignOut()}
           title="End call and sign out"
           type="button"
         >
           {isSigningOut ? (
-            <LoaderCircle aria-hidden="true" className="h-4 w-4 animate-spin" />
+            <LoaderCircle aria-hidden="true" className={styles.utility_afd31a31} />
           ) : (
-            <PhoneOff aria-hidden="true" className="h-4 w-4" />
+            <PhoneOff aria-hidden="true" className={styles.utility_a7e4e66f} />
           )}
         </button>
       </div>

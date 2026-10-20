@@ -1,0 +1,6 @@
+@reference "../../app/globals.css";
+
+/* inline-flex shrink-0 items-center gap-1.5 rounded-md bg-sky-700 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-sky-600 */
+.utility_fbe081c5 {
+  @apply inline-flex shrink-0 items-center gap-1.5 rounded-md bg-sky-700 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-sky-600;
+}
