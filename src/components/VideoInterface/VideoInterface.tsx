@@ -812,8 +812,8 @@ export default function VideoInterface({
 
   if (!role && callStatus === "error") {
     return (
-      <section className={styles.utility_7bd9cb86}>
-        <p aria-live="polite" className={styles.utility_33489aae} role="alert">
+      <section className={styles.contentPanel}>
+        <p aria-live="polite" className={styles.errorMessage} role="alert">
           {errorMessage}
         </p>
       </section>
@@ -821,17 +821,17 @@ export default function VideoInterface({
   }
 
   return (
-    <section className={styles.utility_f3e6ce6e}>
+    <section className={styles.borderedContentPanel}>
       <p
         aria-live="polite"
-        className={[styles.utility_415c96d2, (callStatus === "error" ? styles.utility_1529a707 : styles.utility_8d44cef3)].filter(Boolean).join(" ")}
+        className={[styles.bodyText, (callStatus === "error" ? styles.callStatusError : styles.helperText)].filter(Boolean).join(" ")}
         role={callStatus === "error" ? "alert" : "status"}
         title={callStatusText[callStatus]}
       >
         {callStatusText[callStatus]}
       </p>
 
-      <div className={styles.utility_69026345}>
+      <div className={styles.contentGrid}>
         {(["student", "tutor"] as const).map((tileRole) => {
           const isLocal = tileRole === role;
           const stream = isLocal ? localStream : remoteStream;
@@ -839,20 +839,20 @@ export default function VideoInterface({
           return (
             <div
               key={tileRole}
-              className={styles.utility_f8b7da2b}
+              className={styles.alignedRow}
             >
               {stream && !videoOff ? (
                 <video
                   ref={isLocal ? localVideoRef : remoteVideoRef}
                   autoPlay
-                  className={[styles.utility_9f049a30, (isLocal ? "" : styles.utility_76fc8214)].filter(Boolean).join(" ")}
+                  className={[styles.videoFrame, (isLocal ? "" : styles.mirroredVideo)].filter(Boolean).join(" ")}
                   muted={isLocal}
                   playsInline
                 />
               ) : (
-                <div className={styles.utility_7e67af05}>
-                  <VideoOff aria-hidden="true" className={styles.utility_3a33b9b0} />
-                  <span className={styles.utility_7d2ed93d}>
+                <div className={styles.mutedAlignedRow}>
+                  <VideoOff aria-hidden="true" className={styles.icon} />
+                  <span className={styles.caption}>
                     {isLocal && !localStream
                       ? "Camera off"
                       : tileRole === role
@@ -861,7 +861,7 @@ export default function VideoInterface({
                   </span>
                 </div>
               )}
-              <div className={styles.utility_b0b2f4e0}>
+              <div className={styles.participantNameLabel}>
                 {participantLabel(tileRole)}
               </div>
             </div>
@@ -869,57 +869,57 @@ export default function VideoInterface({
         })}
       </div>
 
-      <div className={styles.utility_a3536e51}>
+      <div className={styles.panelFooter}>
         <button
           aria-label={isMuted ? "Unmute microphone" : "Mute microphone"}
-          className={[styles.utility_794f783d, (isMuted ? styles.utility_7e9fdc4a : styles.utility_8650cac1)].filter(Boolean).join(" ")}
+          className={[styles.toolbarButton, (isMuted ? styles.dangerButton : styles.inactiveMediaButton)].filter(Boolean).join(" ")}
           disabled={!localStream}
           onClick={toggleMute}
           title={isMuted ? "Unmute microphone" : "Mute microphone"}
           type="button"
         >
-          {isMuted ? <MicOff aria-hidden="true" className={styles.utility_a7e4e66f} /> : <Mic aria-hidden="true" className={styles.utility_a7e4e66f} />}
+          {isMuted ? <MicOff aria-hidden="true" className={styles.callControlIcon} /> : <Mic aria-hidden="true" className={styles.callControlIcon} />}
         </button>
 
         <button
           aria-label={isVideoOff ? "Turn camera on" : "Turn camera off"}
-          className={[styles.utility_794f783d, (isVideoOff ? styles.utility_7e9fdc4a : styles.utility_8650cac1)].filter(Boolean).join(" ")}
+          className={[styles.toolbarButton, (isVideoOff ? styles.dangerButton : styles.inactiveMediaButton)].filter(Boolean).join(" ")}
           disabled={!localStream}
           onClick={toggleVideo}
           title={isVideoOff ? "Turn camera on" : "Turn camera off"}
           type="button"
         >
-          {isVideoOff ? <VideoOff aria-hidden="true" className={styles.utility_a7e4e66f} /> : <Video aria-hidden="true" className={styles.utility_a7e4e66f} />}
+          {isVideoOff ? <VideoOff aria-hidden="true" className={styles.callControlIcon} /> : <Video aria-hidden="true" className={styles.callControlIcon} />}
         </button>
 
         {!localStream && (
           <button
             aria-label="Start call"
-            className={styles.utility_47bb3102}
+            className={styles.startCallButton}
             disabled={!role || isStarting || callStatus === "checking"}
             onClick={() => void startCall()}
             title="Start camera and microphone"
             type="button"
           >
             {isStarting ? (
-              <LoaderCircle aria-hidden="true" className={styles.utility_afd31a31} />
+              <LoaderCircle aria-hidden="true" className={styles.loadingIcon} />
             ) : (
-              <Phone aria-hidden="true" className={styles.utility_a7e4e66f} />
+              <Phone aria-hidden="true" className={styles.callControlIcon} />
             )}
           </button>
         )}
         <button
           aria-label="End call and sign out"
-          className={styles.utility_2e26fd2f}
+          className={styles.endCallButton}
           disabled={isSigningOut}
           onClick={() => void endCallAndSignOut()}
           title="End call and sign out"
           type="button"
         >
           {isSigningOut ? (
-            <LoaderCircle aria-hidden="true" className={styles.utility_afd31a31} />
+            <LoaderCircle aria-hidden="true" className={styles.loadingIcon} />
           ) : (
-            <PhoneOff aria-hidden="true" className={styles.utility_a7e4e66f} />
+            <PhoneOff aria-hidden="true" className={styles.callControlIcon} />
           )}
         </button>
       </div>

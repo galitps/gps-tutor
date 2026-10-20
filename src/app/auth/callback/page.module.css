@@ -1,86 +1,86 @@
 @reference "../../globals.css";
 
 /* flex min-h-screen items-center justify-center bg-[#f5f7fb] px-5 py-12 text-slate-900 */
-.utility_6422a31f {
+.pageLayout {
   @apply flex min-h-screen items-center justify-center bg-[#f5f7fb] px-5 py-12 text-slate-900;
 }
 
 /* w-full max-w-lg rounded-3xl bg-white p-8 shadow-xl shadow-slate-900/5 sm:p-12 */
-.utility_237d962d {
+.contentSection {
   @apply w-full max-w-lg rounded-3xl bg-white p-8 shadow-xl shadow-slate-900/5 sm:p-12;
 }
 
 /* text-sm font-semibold uppercase tracking-[0.15em] text-[#386b9a] */
-.utility_fd8e52c1 {
+.eyebrowLabel {
   @apply text-sm font-semibold uppercase tracking-[0.15em] text-[#386b9a];
 }
 
 /* mt-3 text-2xl font-semibold tracking-tight */
-.utility_9f26b461 {
+.pageHeading {
   @apply mt-3 text-2xl font-semibold tracking-tight;
 }
 
 /* mt-3 leading-7 */
-.utility_3a11d0a8 {
+.bodyText {
   @apply mt-3 leading-7;
 }
 
 /* text-red-700 */
-.utility_f3376ad2 {
+.errorMessage {
   @apply text-red-700;
 }
 
 /* text-slate-600 */
-.utility_2d6fbf48 {
+.statusMessage {
   @apply text-slate-600;
 }
 
 /* mt-2 break-all text-sm text-slate-500 */
-.utility_90890890 {
+.helperText {
   @apply mt-2 break-all text-sm text-slate-500;
 }
 
 /* mt-6 space-y-4 */
-.utility_fad340fd {
+.formLayout {
   @apply mt-6 space-y-4;
 }
 
 /* block text-sm font-medium text-slate-700 */
-.utility_52a103ff {
+.messageForTheAdministratorLabel {
   @apply block text-sm font-medium text-slate-700;
 }
 
 /* w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-[#386b9a] focus:ring-4 focus:ring-blue-100 */
-.utility_62304bff {
+.onboardingMessageTextarea {
   @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-[#386b9a] focus:ring-4 focus:ring-blue-100;
 }
 
 /* rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 */
-.utility_2bb5c4b3 {
+.dangerErrorMessage {
   @apply rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700;
 }
 
 /* w-full rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d] disabled:cursor-not-allowed disabled:opacity-60 */
-.utility_fe7c6366 {
+.primaryButton {
   @apply w-full rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d] disabled:cursor-not-allowed disabled:opacity-60;
 }
 
 /* mt-5 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600 */
-.utility_73c958f4 {
+.quotedMessage {
   @apply mt-5 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600;
 }
 
 /* mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 */
-.utility_bc230a50 {
+.requestErrorMessage {
   @apply mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700;
 }
 
 /* mt-8 inline-flex rounded-xl border border-slate-200 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 */
-.utility_4a6c1735 {
+.signOutButton {
   @apply mt-8 inline-flex rounded-xl border border-slate-200 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50;
 }
 
 /* mt-8 inline-flex rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d] */
-.utility_aa895bac {
+.primaryLink {
   @apply mt-8 inline-flex rounded-xl bg-[#183b60] px-5 py-3 font-semibold text-white transition hover:bg-[#102d4d];
 }

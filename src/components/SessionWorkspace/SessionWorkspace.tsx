@@ -19,16 +19,16 @@ export default function SessionWorkspace({
   const [view, setView] = useState<WorkspaceView>("math");
 
   return (
-    <section className={styles.utility_03d7e189}>
+    <section className={styles.contentSection}>
       <div
         aria-label="Session workspace"
-        className={styles.utility_ba2fb302}
+        className={styles.alignedRow}
         role="tablist"
       >
         <button
           aria-controls="math-canvas-panel"
           aria-selected={view === "math"}
-          className={[styles.utility_29d6713b, (view === "math" ? styles.utility_fd21abc5 : styles.utility_5454d762)].filter(Boolean).join(" ")}
+          className={[styles.workspaceTab, (view === "math" ? styles.selectedWorkspaceTab : styles.unselectedWorkspaceTab)].filter(Boolean).join(" ")}
           id="math-canvas-tab"
           onClick={() => setView("math")}
           role="tab"
@@ -40,7 +40,7 @@ export default function SessionWorkspace({
         <button
           aria-controls="whiteboard-panel"
           aria-selected={view === "whiteboard"}
-          className={[styles.utility_29d6713b, (view === "whiteboard" ? styles.utility_fd21abc5 : styles.utility_5454d762)].filter(Boolean).join(" ")}
+          className={[styles.workspaceTab, (view === "whiteboard" ? styles.selectedWorkspaceTab : styles.unselectedWorkspaceTab)].filter(Boolean).join(" ")}
           id="whiteboard-tab"
           onClick={() => setView("whiteboard")}
           role="tab"
@@ -52,7 +52,7 @@ export default function SessionWorkspace({
       </div>
       <div
         aria-labelledby="math-canvas-tab"
-        className={[(view === "math" ? styles.utility_60fbb771 : styles.utility_99d72c7f), styles.utility_8b5f63d2].filter(Boolean).join(" ")}
+        className={[(view === "math" ? styles.workspacePanel : styles.hiddenWorkspacePanel), styles.workspacePanelLayout].filter(Boolean).join(" ")}
         id="math-canvas-panel"
         role="tabpanel"
       >
@@ -60,7 +60,7 @@ export default function SessionWorkspace({
       </div>
       <div
         aria-labelledby="whiteboard-tab"
-        className={[(view === "whiteboard" ? styles.utility_60fbb771 : styles.utility_99d72c7f), styles.utility_8b5f63d2].filter(Boolean).join(" ")}
+        className={[(view === "whiteboard" ? styles.workspacePanel : styles.hiddenWorkspacePanel), styles.workspacePanelLayout].filter(Boolean).join(" ")}
         id="whiteboard-panel"
         role="tabpanel"
       >

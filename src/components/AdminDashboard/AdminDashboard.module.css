@@ -1,231 +1,231 @@
 @reference "../../app/globals.css";
 
 /* min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:px-8 */
-.utility_eaf5adca {
+.pageLayout {
   @apply min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:px-8;
 }
 
 /* mx-auto max-w-6xl */
-.utility_adc5ca27 {
+.dashboardContent {
   @apply mx-auto max-w-6xl;
 }
 
 /* flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-5 */
-.utility_cbd9f2f1 {
+.pageHeader {
   @apply flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-5;
 }
 
 /* text-sm font-semibold uppercase tracking-widest text-sky-300 */
-.utility_2c8d53d4 {
+.eyebrowLabel {
   @apply text-sm font-semibold uppercase tracking-widest text-sky-300;
 }
 
 /* mt-2 text-2xl font-semibold */
-.utility_ca837c1f {
+.manageUsersAndCoursesHeading {
   @apply mt-2 text-2xl font-semibold;
 }
 
 /* mt-1 text-sm text-slate-400 */
-.utility_fdc10ac3 {
+.helperText {
   @apply mt-1 text-sm text-slate-400;
 }
 
 /* rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 */
-.utility_6561ade5 {
+.signOutButton {
   @apply rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800;
 }
 
 /* mt-5 rounded-lg bg-red-950/60 p-3 text-sm text-red-200 */
-.utility_c037e214 {
+.errorMessage {
   @apply mt-5 rounded-lg bg-red-950/60 p-3 text-sm text-red-200;
 }
 
 /* mt-5 rounded-lg bg-emerald-950/60 p-3 text-sm text-emerald-200 */
-.utility_62959d3b {
+.successMessage {
   @apply mt-5 rounded-lg bg-emerald-950/60 p-3 text-sm text-emerald-200;
 }
 
 /* mt-8 text-sm text-slate-300 */
-.utility_834b8477 {
+.bodyText {
   @apply mt-8 text-sm text-slate-300;
 }
 
 /* mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] */
-.utility_83a91963 {
+.contentGrid {
   @apply mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)];
 }
 
 /* space-y-6 */
-.utility_b3542e05 {
+.verticalStack {
   @apply space-y-6;
 }
 
 /* rounded-xl border border-slate-800 bg-slate-900 p-5 */
-.utility_4504467b {
+.contentPanel {
   @apply rounded-xl border border-slate-800 bg-slate-900 p-5;
 }
 
 /* text-lg font-semibold */
-.utility_85884072 {
+.sectionHeading {
   @apply text-lg font-semibold;
 }
 
 /* mt-4 space-y-3 */
-.utility_5383c0c9 {
+.formLayout {
   @apply mt-4 space-y-3;
 }
 
 /* block text-sm text-slate-300 */
-.utility_1cdb1037 {
+.fieldLabel {
   @apply block text-sm text-slate-300;
 }
 
 /* w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm */
-.utility_c6d0cafc {
+.formControl {
   @apply w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm;
 }
 
 /* rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50 */
-.utility_afc25fe3 {
+.primaryButton {
   @apply rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50;
 }
 
 /* mt-4 space-y-4 */
-.utility_c52b72f5 {
+.itemList {
   @apply mt-4 space-y-4;
 }
 
 /* rounded-lg border border-slate-800 p-3 */
-.utility_a7077373 {
+.listItem {
   @apply rounded-lg border border-slate-800 p-3;
 }
 
 /* break-all font-medium */
-.utility_6ea1cadb {
+.requestEmail {
   @apply break-all font-medium;
 }
 
 /* mt-1 text-xs uppercase tracking-wide text-sky-300 */
-.utility_3b0e002d {
+.requestRoleLabel {
   @apply mt-1 text-xs uppercase tracking-wide text-sky-300;
 }
 
 /* mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-300 */
-.utility_0ec212a0 {
+.requestMessage {
   @apply mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-300;
 }
 
 /* mt-3 block text-sm text-slate-300 */
-.utility_1c5ef6e8 {
+.courseAssignmentOptionalLabel {
   @apply mt-3 block text-sm text-slate-300;
 }
 
 /* mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 */
-.utility_22042e41 {
+.tutorAssignmentSelect {
   @apply mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2;
 }
 
 /* mt-3 rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50 */
-.utility_a57ceea5 {
+.requestAddButton {
   @apply mt-3 rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium hover:bg-sky-600 disabled:opacity-50;
 }
 
 /* mt-3 text-sm text-slate-400 */
-.utility_771662c5 {
+.emptyStateMessage {
   @apply mt-3 text-sm text-slate-400;
 }
 
 /* mt-3 space-y-3 */
-.utility_d827a466 {
+.stackedItemList {
   @apply mt-3 space-y-3;
 }
 
 /* flex items-start justify-between gap-3 border-t border-slate-800 pt-3 */
-.utility_1ee340f4 {
+.listRow {
   @apply flex items-start justify-between gap-3 border-t border-slate-800 pt-3;
 }
 
 /* min-w-0 */
-.utility_7e0b7cdf {
+.listItemContent {
   @apply min-w-0;
 }
 
 /* font-medium */
-.utility_2689f395 {
+.courseName {
   @apply font-medium;
 }
 
 /* shrink-0 rounded-lg border border-red-900 px-3 py-1.5 text-xs text-red-300 hover:bg-red-950/60 */
-.utility_cc6ff7a3 {
+.deleteButton {
   @apply shrink-0 rounded-lg border border-red-900 px-3 py-1.5 text-xs text-red-300 hover:bg-red-950/60;
 }
 
 /* mt-3 divide-y divide-slate-800 */
-.utility_1858bd21 {
+.profileList {
   @apply mt-3 divide-y divide-slate-800;
 }
 
 /* flex items-center justify-between gap-3 py-3 */
-.utility_2bf61eb6 {
+.stackedListItem {
   @apply flex items-center justify-between gap-3 py-3;
 }
 
 /* break-all text-sm font-medium */
-.utility_7172a051 {
+.profileEmail {
   @apply break-all text-sm font-medium;
 }
 
 /* mt-1 text-xs capitalize text-slate-400 */
-.utility_48608392 {
+.profileRole {
   @apply mt-1 text-xs capitalize text-slate-400;
 }
 
 /* mt-4 divide-y divide-slate-800 */
-.utility_e0a31eb0 {
+.courseSectionList {
   @apply mt-4 divide-y divide-slate-800;
 }
 
 /* grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] */
-.utility_6cecaf04 {
+.courseSectionRow {
   @apply grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto];
 }
 
 /* truncate font-medium */
-.utility_aa8a5029 {
+.courseSectionName {
   @apply truncate font-medium;
 }
 
 /* mt-1 break-all text-sm text-slate-400 */
-.utility_ee84350e {
+.studentAssignmentDetail {
   @apply mt-1 break-all text-sm text-slate-400;
 }
 
 /* mt-1 break-all text-xs text-slate-500 */
-.utility_74b8c061 {
+.tutorAssignmentDetail {
   @apply mt-1 break-all text-xs text-slate-500;
 }
 
 /* text-sm text-slate-300 */
-.utility_d3a0966d {
+.assignTutorLabel {
   @apply text-sm text-slate-300;
 }
 
 /* self-end rounded-lg border border-red-900 px-3 py-2 text-xs text-red-300 hover:bg-red-950/60 */
-.utility_ed9e7c2c {
+.deleteAssignmentButton {
   @apply self-end rounded-lg border border-red-900 px-3 py-2 text-xs text-red-300 hover:bg-red-950/60;
 }
 
 /* mt-5 text-sm text-slate-400 */
-.utility_25967cd7 {
+.emptyCourseSectionMessage {
   @apply mt-5 text-sm text-slate-400;
 }
 
 /* mt-8 */
-.utility_4e5d2af5 {
+.signInFallbackContainer {
   @apply mt-8;
 }
 
 /* text-sm text-sky-300 */
-.utility_59ad6d1d {
+.returnToSignInLink {
   @apply text-sm text-sky-300;
 }

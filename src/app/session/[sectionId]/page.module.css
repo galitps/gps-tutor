@@ -1,76 +1,76 @@
 @reference "../../globals.css";
 
 /* flex min-h-screen items-center justify-center bg-slate-950 text-slate-200 */
-.utility_a88a3f2d {
+.pageLayout {
   @apply flex min-h-screen items-center justify-center bg-slate-950 text-slate-200;
 }
 
 /* flex min-h-screen items-center justify-center bg-slate-950 px-5 text-slate-100 */
-.utility_5134b564 {
+.flexPageLayout {
   @apply flex min-h-screen items-center justify-center bg-slate-950 px-5 text-slate-100;
 }
 
 /* w-full max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6 */
-.utility_e6df4f4e {
+.contentPanel {
   @apply w-full max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6;
 }
 
 /* text-xl font-semibold */
-.utility_08c50e80 {
+.unableToOpenSessionHeading {
   @apply text-xl font-semibold;
 }
 
 /* mt-3 text-sm text-red-200 */
-.utility_7cc012b9 {
+.errorMessage {
   @apply mt-3 text-sm text-red-200;
 }
 
 /* mt-5 inline-block text-sm text-sky-300 */
-.utility_a48e708d {
+.returnToSignInLink {
   @apply mt-5 inline-block text-sm text-sky-300;
 }
 
 /* flex min-h-screen flex-col bg-slate-950 font-sans text-slate-100 */
-.utility_a6fb0fbc {
+.flexLayout {
   @apply flex min-h-screen flex-col bg-slate-950 font-sans text-slate-100;
 }
 
 /* flex h-14 shrink-0 items-center border-b border-slate-800 bg-slate-900/50 px-6 */
-.utility_51693a83 {
+.pageHeader {
   @apply flex h-14 shrink-0 items-center border-b border-slate-800 bg-slate-900/50 px-6;
 }
 
 /* flex min-w-0 items-center gap-3 */
-.utility_be1287d2 {
+.alignedRow {
   @apply flex min-w-0 items-center gap-3;
 }
 
 /* h-3 w-3 shrink-0 animate-pulse rounded-full bg-emerald-500 */
-.utility_9b979c59 {
+.contentContainer {
   @apply h-3 w-3 shrink-0 animate-pulse rounded-full bg-emerald-500;
 }
 
 /* truncate text-sm font-semibold text-slate-200 sm:text-base */
-.utility_17aacdb0 {
+.pageHeading {
   @apply truncate text-sm font-semibold text-slate-200 sm:text-base;
 }
 
 /* grid h-[calc(100vh-3.5rem)] flex-1 grid-cols-1 gap-4 overflow-hidden p-4 lg:grid-cols-12 */
-.utility_5c265bec {
+.sessionWorkspace {
   @apply grid h-[calc(100vh-3.5rem)] flex-1 grid-cols-1 gap-4 overflow-hidden p-4 lg:grid-cols-12;
 }
 
 /* flex h-full min-w-0 flex-col lg:col-span-8 */
-.utility_174c3811 {
+.contentSection {
   @apply flex h-full min-w-0 flex-col lg:col-span-8;
 }
 
 /* flex h-full min-h-0 flex-col gap-4 lg:col-span-4 */
-.utility_4c8c165b {
+.flexContentSection {
   @apply flex h-full min-h-0 flex-col gap-4 lg:col-span-4;
 }
 
 /* h-48 shrink-0 */
-.utility_65b74a91 {
+.sessionContentArea {
   @apply h-48 shrink-0;
 }

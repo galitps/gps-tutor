@@ -22,9 +22,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={[geistSans.variable, geistMono.variable, styles.utility_4386e19f].filter(Boolean).join(" ")}
+      className={[geistSans.variable, geistMono.variable, styles.documentRoot].filter(Boolean).join(" ")}
     >
-      <body className={styles.utility_54900b22}>{children}</body>
+      <body className={styles.pageBody}>{children}</body>
     </html>
   );
 }

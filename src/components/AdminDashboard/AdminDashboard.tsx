@@ -512,20 +512,20 @@ export default function AdminDashboard() {
   const profileById = new Map(data?.profiles.map((profile) => [profile.id, profile]) ?? []);
 
   return (
-    <main className={styles.utility_eaf5adca}>
-      <div className={styles.utility_adc5ca27}>
-        <header className={styles.utility_cbd9f2f1}>
+    <main className={styles.pageLayout}>
+      <div className={styles.dashboardContent}>
+        <header className={styles.pageHeader}>
           <div>
-            <p className={styles.utility_2c8d53d4}>
+            <p className={styles.eyebrowLabel}>
               GPS Tutor administration
             </p>
-            <h1 className={styles.utility_ca837c1f}>Manage users and courses</h1>
-            <p className={styles.utility_fdc10ac3}>
+            <h1 className={styles.manageUsersAndCoursesHeading}>Manage users and courses</h1>
+            <p className={styles.helperText}>
               Admin accounts cannot enter tutoring sessions. Sign out and sign in as a tutor to tutor a student.
             </p>
           </div>
           <button
-            className={styles.utility_6561ade5}
+            className={styles.signOutButton}
             onClick={() => void signOut()}
             type="button"
           >
@@ -534,46 +534,46 @@ export default function AdminDashboard() {
         </header>
 
         {errorMessage && (
-          <p className={styles.utility_c037e214} role="alert">
+          <p className={styles.errorMessage} role="alert">
             {errorMessage}
           </p>
         )}
         {successMessage && (
-          <p className={styles.utility_62959d3b} role="status">
+          <p className={styles.successMessage} role="status">
             {successMessage}
           </p>
         )}
 
         {isLoading ? (
-          <p aria-live="polite" className={styles.utility_834b8477} role="status">
+          <p aria-live="polite" className={styles.bodyText} role="status">
             Loading administration data...
           </p>
         ) : data ? (
-          <div className={styles.utility_83a91963}>
-            <div className={styles.utility_b3542e05}>
-              <section className={styles.utility_4504467b}>
-                <h2 className={styles.utility_85884072}>Invite a new student or tutor</h2>
-                <p className={styles.utility_fdc10ac3}>
+          <div className={styles.contentGrid}>
+            <div className={styles.verticalStack}>
+              <section className={styles.contentPanel}>
+                <h2 className={styles.sectionHeading}>Invite a new student or tutor</h2>
+                <p className={styles.helperText}>
                   Send an automated invitation email. The account and optional course assignment are created after the user accepts.
                 </p>
-                <form className={styles.utility_5383c0c9} onSubmit={(event) => void inviteUser(event)}>
-                  <label className={styles.utility_1cdb1037} htmlFor="new-user-email">
+                <form className={styles.formLayout} onSubmit={(event) => void inviteUser(event)}>
+                  <label className={styles.fieldLabel} htmlFor="new-user-email">
                     Email
                   </label>
                   <input
                     autoComplete="email"
-                    className={styles.utility_c6d0cafc}
+                    className={styles.formControl}
                     id="new-user-email"
                     onChange={(event) => setInviteEmail(event.target.value)}
                     required
                     type="email"
                     value={inviteEmail}
                   />
-                  <label className={styles.utility_1cdb1037} htmlFor="new-user-role">
+                  <label className={styles.fieldLabel} htmlFor="new-user-role">
                     Account type
                   </label>
                   <select
-                    className={styles.utility_c6d0cafc}
+                    className={styles.formControl}
                     id="new-user-role"
                     onChange={(event) => {
                       const role = event.target.value;
@@ -591,11 +591,11 @@ export default function AdminDashboard() {
                   </select>
                   {inviteRole === "student" && (
                     <>
-                      <label className={styles.utility_1cdb1037} htmlFor="new-user-course">
+                      <label className={styles.fieldLabel} htmlFor="new-user-course">
                         Course (optional)
                       </label>
                       <select
-                        className={styles.utility_c6d0cafc}
+                        className={styles.formControl}
                         id="new-user-course"
                         onChange={(event) => setInviteCourseId(event.target.value)}
                         value={inviteCourseId}
@@ -608,7 +608,7 @@ export default function AdminDashboard() {
                     </>
                   )}
                   <button
-                    className={styles.utility_afc25fe3}
+                    className={styles.primaryButton}
                     disabled={isSendingInvitation || !inviteEmail.trim()}
                     type="submit"
                   >
@@ -617,29 +617,29 @@ export default function AdminDashboard() {
                 </form>
               </section>
 
-              <section className={styles.utility_4504467b}>
-                <h2 className={styles.utility_85884072}>Add an existing account</h2>
-                <p className={styles.utility_fdc10ac3}>
+              <section className={styles.contentPanel}>
+                <h2 className={styles.sectionHeading}>Add an existing account</h2>
+                <p className={styles.helperText}>
                   Use this for someone who already has a sign-in account. They do not need to submit an account request.
                 </p>
-                <form className={styles.utility_5383c0c9} onSubmit={(event) => void addUser(event)}>
-                  <label className={styles.utility_1cdb1037} htmlFor="existing-user-email">
+                <form className={styles.formLayout} onSubmit={(event) => void addUser(event)}>
+                  <label className={styles.fieldLabel} htmlFor="existing-user-email">
                     User email
                   </label>
                   <input
                     autoComplete="email"
-                    className={styles.utility_c6d0cafc}
+                    className={styles.formControl}
                     id="existing-user-email"
                     onChange={(event) => setNewUserEmail(event.target.value)}
                     required
                     type="email"
                     value={newUserEmail}
                   />
-                  <label className={styles.utility_1cdb1037} htmlFor="existing-user-role">
+                  <label className={styles.fieldLabel} htmlFor="existing-user-role">
                     Account type
                   </label>
                   <select
-                    className={styles.utility_c6d0cafc}
+                    className={styles.formControl}
                     id="existing-user-role"
                     onChange={(event) => {
                       const role = event.target.value;
@@ -657,11 +657,11 @@ export default function AdminDashboard() {
                   </select>
                   {newUserRole === "student" && (
                     <>
-                      <label className={styles.utility_1cdb1037} htmlFor="existing-user-course">
+                      <label className={styles.fieldLabel} htmlFor="existing-user-course">
                         Course (optional)
                       </label>
                       <select
-                        className={styles.utility_c6d0cafc}
+                        className={styles.formControl}
                         id="existing-user-course"
                         onChange={(event) => setNewUserCourseId(event.target.value)}
                         value={newUserCourseId}
@@ -674,7 +674,7 @@ export default function AdminDashboard() {
                     </>
                   )}
                   <button
-                    className={styles.utility_afc25fe3}
+                    className={styles.primaryButton}
                     disabled={isCreatingProfile || !newUserEmail.trim()}
                     type="submit"
                   >
@@ -683,27 +683,27 @@ export default function AdminDashboard() {
                 </form>
               </section>
 
-              <section className={styles.utility_4504467b}>
-                <h2 className={styles.utility_85884072}>New account requests</h2>
-                <p className={styles.utility_fdc10ac3}>
+              <section className={styles.contentPanel}>
+                <h2 className={styles.sectionHeading}>New account requests</h2>
+                <p className={styles.helperText}>
                   Review the user’s message, then create their account. Assign a course when adding a student.
                 </p>
                 {data.requests.length ? (
-                  <ul className={styles.utility_c52b72f5}>
+                  <ul className={styles.itemList}>
                     {data.requests.map((request) => (
-                      <li key={request.user_id} className={styles.utility_a7077373}>
-                        <p className={styles.utility_6ea1cadb}>{request.email}</p>
-                        <p className={styles.utility_3b0e002d}>
+                      <li key={request.user_id} className={styles.listItem}>
+                        <p className={styles.requestEmail}>{request.email}</p>
+                        <p className={styles.requestRoleLabel}>
                           Requested {request.requested_role}
                         </p>
-                        <p className={styles.utility_0ec212a0}>
+                        <p className={styles.requestMessage}>
                           {request.message}
                         </p>
                         {request.requested_role === "student" && (
-                          <label className={styles.utility_1c5ef6e8}>
+                          <label className={styles.courseAssignmentOptionalLabel}>
                             Course assignment (optional)
                             <select
-                              className={styles.utility_22042e41}
+                              className={styles.tutorAssignmentSelect}
                               onChange={(event) =>
                                 setRequestCourseIds((current) => ({
                                   ...current,
@@ -720,7 +720,7 @@ export default function AdminDashboard() {
                           </label>
                         )}
                         <button
-                          className={styles.utility_a57ceea5}
+                          className={styles.requestAddButton}
                           disabled={isCreatingProfile}
                           onClick={() =>
                             void createProfile(
@@ -737,29 +737,29 @@ export default function AdminDashboard() {
                     ))}
                   </ul>
                 ) : (
-                  <p className={styles.utility_771662c5}>There are no pending account requests.</p>
+                  <p className={styles.emptyStateMessage}>There are no pending account requests.</p>
                 )}
               </section>
 
-              <section className={styles.utility_4504467b}>
-                <h2 className={styles.utility_85884072}>Define a course</h2>
-                <form className={styles.utility_5383c0c9} onSubmit={(event) => void createCourse(event)}>
-                  <label className={styles.utility_1cdb1037} htmlFor="course-name">
+              <section className={styles.contentPanel}>
+                <h2 className={styles.sectionHeading}>Define a course</h2>
+                <form className={styles.formLayout} onSubmit={(event) => void createCourse(event)}>
+                  <label className={styles.fieldLabel} htmlFor="course-name">
                     Course name
                   </label>
                   <input
-                    className={styles.utility_c6d0cafc}
+                    className={styles.formControl}
                     id="course-name"
                     maxLength={120}
                     onChange={(event) => setCourseName(event.target.value)}
                     required
                     value={courseName}
                   />
-                  <label className={styles.utility_1cdb1037} htmlFor="course-description">
+                  <label className={styles.fieldLabel} htmlFor="course-description">
                     Description (optional)
                   </label>
                   <textarea
-                    className={styles.utility_c6d0cafc}
+                    className={styles.formControl}
                     id="course-description"
                     maxLength={2000}
                     onChange={(event) => setCourseDescription(event.target.value)}
@@ -767,7 +767,7 @@ export default function AdminDashboard() {
                     value={courseDescription}
                   />
                   <button
-                    className={styles.utility_afc25fe3}
+                    className={styles.primaryButton}
                     disabled={isSavingCourse || !courseName.trim()}
                     type="submit"
                   >
@@ -776,17 +776,17 @@ export default function AdminDashboard() {
                 </form>
               </section>
 
-              <section className={styles.utility_4504467b}>
-                <h2 className={styles.utility_85884072}>Assign a course to a student</h2>
-                <p className={styles.utility_fdc10ac3}>
+              <section className={styles.contentPanel}>
+                <h2 className={styles.sectionHeading}>Assign a course to a student</h2>
+                <p className={styles.helperText}>
                   Each student receives a separate section for each course.
                 </p>
-                <form className={styles.utility_5383c0c9} onSubmit={(event) => void assignStudent(event)}>
-                  <label className={styles.utility_1cdb1037} htmlFor="assign-course">
+                <form className={styles.formLayout} onSubmit={(event) => void assignStudent(event)}>
+                  <label className={styles.fieldLabel} htmlFor="assign-course">
                     Course
                   </label>
                   <select
-                    className={styles.utility_c6d0cafc}
+                    className={styles.formControl}
                     id="assign-course"
                     onChange={(event) => setSelectedCourseId(event.target.value)}
                     required
@@ -797,11 +797,11 @@ export default function AdminDashboard() {
                       <option key={course.id} value={course.id}>{course.name}</option>
                     ))}
                   </select>
-                  <label className={styles.utility_1cdb1037} htmlFor="assign-student">
+                  <label className={styles.fieldLabel} htmlFor="assign-student">
                     Student
                   </label>
                   <select
-                    className={styles.utility_c6d0cafc}
+                    className={styles.formControl}
                     id="assign-student"
                     onChange={(event) => setSelectedStudentId(event.target.value)}
                     required
@@ -815,7 +815,7 @@ export default function AdminDashboard() {
                     ))}
                   </select>
                   <button
-                    className={styles.utility_afc25fe3}
+                    className={styles.primaryButton}
                     disabled={
                       isAssigningStudent ||
                       !selectedCourseId ||
@@ -828,20 +828,20 @@ export default function AdminDashboard() {
                 </form>
               </section>
 
-              <section className={styles.utility_4504467b}>
-                <h2 className={styles.utility_85884072}>Courses</h2>
+              <section className={styles.contentPanel}>
+                <h2 className={styles.sectionHeading}>Courses</h2>
                 {data.courses.length ? (
-                  <ul className={styles.utility_d827a466}>
+                  <ul className={styles.stackedItemList}>
                     {data.courses.map((course) => (
-                      <li key={course.id} className={styles.utility_1ee340f4}>
-                        <div className={styles.utility_7e0b7cdf}>
-                          <p className={styles.utility_2689f395}>{course.name}</p>
+                      <li key={course.id} className={styles.listRow}>
+                        <div className={styles.listItemContent}>
+                          <p className={styles.courseName}>{course.name}</p>
                           {course.description && (
-                            <p className={styles.utility_fdc10ac3}>{course.description}</p>
+                            <p className={styles.helperText}>{course.description}</p>
                           )}
                         </div>
                         <button
-                          className={styles.utility_cc6ff7a3}
+                          className={styles.deleteButton}
                           onClick={() => void deleteCourse(course)}
                           type="button"
                         >
@@ -851,26 +851,26 @@ export default function AdminDashboard() {
                     ))}
                   </ul>
                 ) : (
-                  <p className={styles.utility_771662c5}>No courses have been created.</p>
+                  <p className={styles.emptyStateMessage}>No courses have been created.</p>
                 )}
               </section>
 
-              <section className={styles.utility_4504467b}>
-                <h2 className={styles.utility_85884072}>Students and tutors</h2>
+              <section className={styles.contentPanel}>
+                <h2 className={styles.sectionHeading}>Students and tutors</h2>
                 {data.profiles.filter(({ role }) => role !== "admin").length ? (
-                  <ul className={styles.utility_1858bd21}>
+                  <ul className={styles.profileList}>
                     {data.profiles
                       .filter(({ role }) => role !== "admin")
                       .map((profile) => (
-                        <li key={profile.id} className={styles.utility_2bf61eb6}>
-                          <div className={styles.utility_7e0b7cdf}>
-                            <p className={styles.utility_7172a051}>
+                        <li key={profile.id} className={styles.stackedListItem}>
+                          <div className={styles.listItemContent}>
+                            <p className={styles.profileEmail}>
                               {profile.email ?? profile.id}
                             </p>
-                            <p className={styles.utility_48608392}>{profile.role}</p>
+                            <p className={styles.profileRole}>{profile.role}</p>
                           </div>
                           <button
-                            className={styles.utility_cc6ff7a3}
+                            className={styles.deleteButton}
                             onClick={() => void deleteProfile(profile)}
                             type="button"
                           >
@@ -880,18 +880,18 @@ export default function AdminDashboard() {
                       ))}
                   </ul>
                 ) : (
-                  <p className={styles.utility_771662c5}>No students or tutors have been added.</p>
+                  <p className={styles.emptyStateMessage}>No students or tutors have been added.</p>
                 )}
               </section>
             </div>
 
-            <section className={styles.utility_4504467b}>
-              <h2 className={styles.utility_85884072}>Student course sections</h2>
-              <p className={styles.utility_fdc10ac3}>
+            <section className={styles.contentPanel}>
+              <h2 className={styles.sectionHeading}>Student course sections</h2>
+              <p className={styles.helperText}>
                 Assign a tutor independently for each student/course combination.
               </p>
               {data.sections.length ? (
-                <ul className={styles.utility_e0a31eb0}>
+                <ul className={styles.courseSectionList}>
                   {data.sections.map((section) => {
                     const course = courseById.get(section.course_id);
                     const student = profileById.get(section.student_id);
@@ -899,20 +899,20 @@ export default function AdminDashboard() {
                       ? profileById.get(section.tutor_id)
                       : null;
                     return (
-                      <li key={section.id} className={styles.utility_6cecaf04}>
-                        <div className={styles.utility_7e0b7cdf}>
-                          <p className={styles.utility_aa8a5029}>{course?.name ?? "Course unavailable"}</p>
-                          <p className={styles.utility_ee84350e}>
+                      <li key={section.id} className={styles.courseSectionRow}>
+                        <div className={styles.listItemContent}>
+                          <p className={styles.courseSectionName}>{course?.name ?? "Course unavailable"}</p>
+                          <p className={styles.studentAssignmentDetail}>
                             Student: {student?.email ?? "email unavailable"}
                           </p>
-                          <p className={styles.utility_74b8c061}>
+                          <p className={styles.tutorAssignmentDetail}>
                             Tutor: {tutor?.email ?? "unassigned"}
                           </p>
                         </div>
-                        <label className={styles.utility_d3a0966d}>
+                        <label className={styles.assignTutorLabel}>
                           Assign tutor
                           <select
-                            className={styles.utility_22042e41}
+                            className={styles.tutorAssignmentSelect}
                             onChange={(event) =>
                               void assignTutor(section.id, event.target.value || null)
                             }
@@ -927,7 +927,7 @@ export default function AdminDashboard() {
                           </select>
                         </label>
                         <button
-                          className={styles.utility_ed9e7c2c}
+                          className={styles.deleteAssignmentButton}
                           onClick={() => void deleteAssignment(section)}
                           type="button"
                         >
@@ -938,15 +938,15 @@ export default function AdminDashboard() {
                   })}
                 </ul>
               ) : (
-                <p className={styles.utility_25967cd7}>
+                <p className={styles.emptyCourseSectionMessage}>
                   No student sections yet. Create one by assigning a course to a student.
                 </p>
               )}
             </section>
           </div>
         ) : (
-          <div className={styles.utility_4e5d2af5}>
-            <Link className={styles.utility_59ad6d1d} href="/">Return to sign in</Link>
+          <div className={styles.signInFallbackContainer}>
+            <Link className={styles.returnToSignInLink} href="/">Return to sign in</Link>
           </div>
         )}
       </div>

@@ -256,14 +256,14 @@ export default function SessionChat({
   if (connectionStatus === "checking" || connectionStatus === "connecting") {
     return (
       <section
-        className={styles.utility_caf71e34}
+        className={styles.contentPanel}
         data-printable="chat"
       >
-        <div className={styles.utility_1eb54dfc}>
-          <h2 className={styles.utility_65f0c2de}>Session chat</h2>
+        <div className={styles.spacedRow}>
+          <h2 className={styles.sessionChatHeading}>Session chat</h2>
           <PrintButton display="chat" label="chat" />
         </div>
-        <p aria-live="polite" className={styles.utility_771662c5} role="status">
+        <p aria-live="polite" className={styles.helperText} role="status">
           {connectionStatus === "checking" ? "Checking your sign-in..." : "Connecting to session chat..."}
         </p>
       </section>
@@ -273,17 +273,17 @@ export default function SessionChat({
   if (connectionStatus === "signed-out") {
     return (
       <section
-        className={styles.utility_caf71e34}
+        className={styles.contentPanel}
         data-printable="chat"
       >
-        <div className={styles.utility_1eb54dfc}>
-          <h2 className={styles.utility_65f0c2de}>Session chat</h2>
+        <div className={styles.spacedRow}>
+          <h2 className={styles.sessionChatHeading}>Session chat</h2>
           <PrintButton display="chat" label="chat" />
         </div>
-        <p className={styles.utility_771662c5}>
+        <p className={styles.helperText}>
           Sign in as a student or tutor to join this chat.
         </p>
-        <Link className={styles.utility_9325e48a} href="/">
+        <Link className={styles.textLink} href="/">
           Go to sign in
         </Link>
       </section>
@@ -293,17 +293,17 @@ export default function SessionChat({
   if (!role || !userId) {
     return (
       <section
-        className={styles.utility_caf71e34}
+        className={styles.contentPanel}
         data-printable="chat"
       >
-        <div className={styles.utility_1eb54dfc}>
-          <h2 className={styles.utility_65f0c2de}>Session chat</h2>
+        <div className={styles.spacedRow}>
+          <h2 className={styles.sessionChatHeading}>Session chat</h2>
           <PrintButton display="chat" label="chat" />
         </div>
-        <p aria-live="polite" className={styles.utility_e3189795} role="alert">
+        <p aria-live="polite" className={styles.errorMessage} role="alert">
           {errorMessage || "Unable to verify your tutoring session."}
         </p>
-        <Link className={styles.utility_9325e48a} href="/">
+        <Link className={styles.textLink} href="/">
           Return to sign in
         </Link>
       </section>
@@ -312,22 +312,22 @@ export default function SessionChat({
 
   return (
     <section
-      className={styles.utility_7c015883}
+      className={styles.borderedContentPanel}
       data-printable="chat"
     >
-      <div className={styles.utility_2f314fe2}>
-        <div className={styles.utility_0a400a51}>
-          <span className={styles.utility_451f34ab}>
+      <div className={styles.chatHeader}>
+        <div className={styles.participantList}>
+          <span className={styles.caption}>
             Student: {participantEmails.student ?? "waiting"}
           </span>
-          <span className={styles.utility_451f34ab}>
+          <span className={styles.caption}>
             Tutor: {participantEmails.tutor ?? "waiting"}
           </span>
         </div>
-        <span className={styles.utility_7f2a3b5d}>
+        <span className={styles.mutedCaption}>
           <span
             aria-hidden="true"
-            className={[styles.utility_7efd8137, (connectionStatus === "connected" ? styles.utility_6f845a7c : styles.utility_177b8260)].filter(Boolean).join(" ")}
+            className={[styles.presenceIndicator, (connectionStatus === "connected" ? styles.successCaption : styles.dangerCaption)].filter(Boolean).join(" ")}
           />
           {connectionStatus === "connected" ? "Connected" : "Connection issue"}
         </span>
@@ -336,37 +336,37 @@ export default function SessionChat({
 
       <div
         aria-live="polite"
-        className={styles.utility_db0c72e6}
+        className={styles.chatMessageList}
         data-chat-messages
         role="log"
         aria-label="Session chat messages"
       >
         {messages.length === 0 ? (
-          <p className={styles.utility_be9ed4e9}>No messages yet.</p>
+          <p className={styles.emptyChatMessage}>No messages yet.</p>
         ) : (
           messages.map((message) => (
             <div
               key={message.id}
               data-chat-message
-              className={[styles.utility_a3acd195, (message.sender_id === userId ? styles.utility_8edadd74 : styles.utility_2e7b46b6)].filter(Boolean).join(" ")}
+              className={[styles.chatMessageBubble, (message.sender_id === userId ? styles.outgoingMessageBubble : styles.incomingMessageBubble)].filter(Boolean).join(" ")}
             >
-              <p className={styles.utility_4eaebe87}>
+              <p className={styles.messageSenderLabel}>
                 {message.sender_id === userId ? role : peerRole}
               </p>
-              <p className={styles.utility_170cee3f}>{message.content}</p>
+              <p className={styles.bodyText}>{message.content}</p>
             </div>
           ))
         )}
       </div>
 
       <form
-        className={styles.utility_a4fa6ef5}
+        className={styles.formLayout}
         data-print-hide
         onSubmit={handleSend}
       >
         <input
           aria-label="Message in session chat"
-          className={styles.utility_4c0449f9}
+          className={styles.formControl}
           disabled={connectionStatus !== "connected" || isSending}
           maxLength={1000}
           onChange={(event) => setDraft(event.target.value)}
@@ -375,7 +375,7 @@ export default function SessionChat({
         />
         <button
           aria-label="Send message"
-          className={styles.utility_eb6b19d1}
+          className={styles.primaryButton}
           disabled={!draft.trim() || connectionStatus !== "connected" || isSending}
           type="submit"
         >
@@ -384,7 +384,7 @@ export default function SessionChat({
       </form>
 
       {errorMessage && (
-        <p aria-live="polite" className={styles.utility_0e186f5b} role="alert" data-print-hide>
+        <p aria-live="polite" className={styles.dangerErrorMessage} role="alert" data-print-hide>
           {errorMessage}
         </p>
       )}

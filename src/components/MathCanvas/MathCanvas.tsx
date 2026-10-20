@@ -808,12 +808,12 @@ export default function MathCanvas({
 
   return (
     <div
-      className={[styles.container, styles.utility_d89972fe].filter(Boolean).join(" ")}
+      className={[styles.container, styles.canvasRelativeContainer].filter(Boolean).join(" ")}
       data-printable="math-canvas"
     >
       {(isLoading || errorMessage) && (
         <div
-          className={[styles.statusOverlay, styles.utility_0f2fff0a, (errorMessage ? styles.utility_1529a707 : "")].filter(Boolean).join(" ")}
+          className={[styles.statusOverlay, styles.loadingOverlayLayer, (errorMessage ? styles.errorStatusText : "")].filter(Boolean).join(" ")}
           data-print-hide
           role={errorMessage ? "alert" : "status"}
         >
@@ -828,17 +828,17 @@ export default function MathCanvas({
       {!isEditing && !isLoading && (
         <div
           aria-label="Graph editing is locked"
-          className={styles.utility_21617f24}
+          className={styles.graphReadOnlyOverlay}
           role="presentation"
           data-print-hide
         />
       )}
       <div
-        className={styles.utility_425c0bf0}
+        className={styles.graphControlToolbar}
         data-print-hide
       >
         <button
-          className={styles.utility_c068dff9}
+          className={styles.graphControlButton}
           disabled={
             isLoading ||
             !role ||
@@ -859,11 +859,11 @@ export default function MathCanvas({
                   : `${lockOwnerRole ?? "Participant"} editing`
                 : "Take edit control"}
         </button>
-        <span aria-live="polite" className={styles.utility_e0ef08ef}>
+        <span aria-live="polite" className={styles.lockStatusLabel}>
           {lockLabel}
         </span>
       </div>
-      <div className={styles.utility_8a3a5e43} data-print-hide>
+      <div className={styles.graphPrintButton} data-print-hide>
         <PrintButton display="math-canvas" label="Math Canvas" />
       </div>
     </div>

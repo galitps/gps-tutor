@@ -134,7 +134,7 @@ export default function SessionPage() {
 
   if (isLoading) {
     return (
-      <main className={styles.utility_a88a3f2d}>
+      <main className={styles.pageLayout}>
         <p aria-live="polite" role="status">Loading your tutoring session...</p>
       </main>
     );
@@ -142,13 +142,13 @@ export default function SessionPage() {
 
   if (!session) {
     return (
-      <main className={styles.utility_5134b564}>
-        <section className={styles.utility_e6df4f4e}>
-          <h1 className={styles.utility_08c50e80}>Unable to open session</h1>
-          <p className={styles.utility_7cc012b9} role="alert">
+      <main className={styles.flexPageLayout}>
+        <section className={styles.contentPanel}>
+          <h1 className={styles.unableToOpenSessionHeading}>Unable to open session</h1>
+          <p className={styles.errorMessage} role="alert">
             {errorMessage || "The requested tutoring session is unavailable."}
           </p>
-          <Link className={styles.utility_a48e708d} href="/">
+          <Link className={styles.returnToSignInLink} href="/">
             Return to sign in
           </Link>
         </section>
@@ -157,23 +157,23 @@ export default function SessionPage() {
   }
 
   return (
-    <div className={styles.utility_a6fb0fbc}>
-      <header className={styles.utility_51693a83}>
-        <div className={styles.utility_be1287d2}>
-          <div className={styles.utility_9b979c59} />
-          <h1 className={styles.utility_17aacdb0}>
+    <div className={styles.flexLayout}>
+      <header className={styles.pageHeader}>
+        <div className={styles.alignedRow}>
+          <div className={styles.contentContainer} />
+          <h1 className={styles.pageHeading}>
             {session.courseName}
           </h1>
         </div>
       </header>
 
       <SessionParticipantsProvider>
-        <main className={styles.utility_5c265bec}>
-          <section className={styles.utility_174c3811}>
+        <main className={styles.sessionWorkspace}>
+          <section className={styles.contentSection}>
             <SessionWorkspace sessionId={session.id} sessionRole={session.role} />
           </section>
-          <section className={styles.utility_4c8c165b}>
-            <div className={styles.utility_65b74a91}>
+          <section className={styles.flexContentSection}>
+            <div className={styles.sessionContentArea}>
               <VideoInterface sessionId={session.id} sessionRole={session.role} />
             </div>
             <SessionChat sessionId={session.id} sessionRole={session.role} />

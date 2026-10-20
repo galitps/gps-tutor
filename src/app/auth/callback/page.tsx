@@ -222,12 +222,12 @@ export default function AuthCallbackPage() {
   }
 
   return (
-    <main className={styles.utility_6422a31f}>
-      <section className={styles.utility_237d962d}>
-        <p className={styles.utility_fd8e52c1}>
+    <main className={styles.pageLayout}>
+      <section className={styles.contentSection}>
+        <p className={styles.eyebrowLabel}>
           GPS Tutor
         </p>
-        <h1 className={styles.utility_9f26b461}>
+        <h1 className={styles.pageHeading}>
           {status === "checking"
             ? "Completing sign-in"
             : status === "success"
@@ -240,19 +240,19 @@ export default function AuthCallbackPage() {
         </h1>
         <p
           aria-live="polite"
-          className={[styles.utility_3a11d0a8, (status === "error" ? styles.utility_f3376ad2 : styles.utility_2d6fbf48)].filter(Boolean).join(" ")}
+          className={[styles.bodyText, (status === "error" ? styles.errorMessage : styles.statusMessage)].filter(Boolean).join(" ")}
           role={status === "error" ? "alert" : "status"}
         >
           {message}
         </p>
-        {email && <p className={styles.utility_90890890}>{email}</p>}
+        {email && <p className={styles.helperText}>{email}</p>}
         {status === "onboarding" && (
-          <form className={styles.utility_fad340fd} onSubmit={(event) => void submitOnboardingRequest(event)}>
-            <label className={styles.utility_52a103ff} htmlFor="onboarding-message">
+          <form className={styles.formLayout} onSubmit={(event) => void submitOnboardingRequest(event)}>
+            <label className={styles.messageForTheAdministratorLabel} htmlFor="onboarding-message">
               Message for the administrator
             </label>
             <textarea
-              className={styles.utility_62304bff}
+              className={styles.onboardingMessageTextarea}
               id="onboarding-message"
               maxLength={2000}
               onChange={(event) => setOnboardingMessage(event.target.value)}
@@ -261,12 +261,12 @@ export default function AuthCallbackPage() {
               value={onboardingMessage}
             />
             {requestMessage && (
-              <p className={styles.utility_2bb5c4b3} role="alert">
+              <p className={styles.dangerErrorMessage} role="alert">
                 {requestMessage}
               </p>
             )}
             <button
-              className={styles.utility_fe7c6366}
+              className={styles.primaryButton}
               disabled={isSubmittingRequest || !onboardingMessage.trim()}
               type="submit"
             >
@@ -275,18 +275,18 @@ export default function AuthCallbackPage() {
           </form>
         )}
         {status === "pending" && onboardingMessage && (
-          <blockquote className={styles.utility_73c958f4}>
+          <blockquote className={styles.quotedMessage}>
             {onboardingMessage}
           </blockquote>
         )}
         {status === "pending" && requestMessage && (
-          <p className={styles.utility_bc230a50} role="alert">
+          <p className={styles.requestErrorMessage} role="alert">
             {requestMessage}
           </p>
         )}
         {status === "pending" && (
           <button
-            className={styles.utility_4a6c1735}
+            className={styles.signOutButton}
             onClick={() => void signOutFromPendingRequest()}
             type="button"
           >
@@ -297,7 +297,7 @@ export default function AuthCallbackPage() {
           status !== "onboarding" &&
           status !== "pending" && (
           <Link
-            className={styles.utility_aa895bac}
+            className={styles.primaryLink}
             href={
               status === "success"
                 ? signedInRole === "admin"

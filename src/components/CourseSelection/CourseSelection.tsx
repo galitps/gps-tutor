@@ -158,40 +158,40 @@ export default function CourseSelection() {
   }
 
   return (
-    <main className={styles.utility_066ade19}>
-      <section className={styles.utility_2db3d385}>
-        <p className={styles.utility_2c8d53d4}>
+    <main className={styles.pageLayout}>
+      <section className={styles.contentPanel}>
+        <p className={styles.eyebrowLabel}>
           GPS Tutor
         </p>
-        <h1 className={styles.utility_3f306c6a}>Select a course</h1>
-        <p className={styles.utility_4f37fcfe}>
+        <h1 className={styles.selectACourseHeading}>Select a course</h1>
+        <p className={styles.helperText}>
           You can only enter a course section assigned to your account.
         </p>
 
         {isLoading ? (
-          <p aria-live="polite" className={styles.utility_834b8477} role="status">
+          <p aria-live="polite" className={styles.bodyText} role="status">
             Loading your course assignments...
           </p>
         ) : errorMessage ? (
-          <div className={styles.utility_31f25533}>
-            <p className={styles.utility_d8f13a23} role="alert">
+          <div className={styles.contentContainer}>
+            <p className={styles.errorMessage} role="alert">
               {errorMessage}
             </p>
-            <Link className={styles.utility_4b612a7d} href="/">
+            <Link className={styles.returnToSignInLink} href="/">
               Return to sign in
             </Link>
           </div>
         ) : options.length ? (
-          <ul className={styles.utility_54a77f7e}>
+          <ul className={styles.itemList}>
             {options.map((option) => (
               <li key={option.id}>
                 <Link
-                  className={styles.utility_c8bcd5a6}
+                  className={styles.primaryLink}
                   href={`/session/${option.id}`}
                 >
-                  <span className={styles.utility_a27bffaa}>{option.courseName}</span>
+                  <span className={styles.caption}>{option.courseName}</span>
                   {role === "tutor" && (
-                    <span className={styles.utility_39229847}>
+                    <span className={styles.mutedCaption}>
                       Student: {option.studentEmail ?? "email unavailable"}
                     </span>
                   )}
@@ -200,18 +200,18 @@ export default function CourseSelection() {
             ))}
           </ul>
         ) : (
-          <div className={styles.utility_d9a59e1c}>
-            <p className={styles.utility_0b5e6ab6}>
+          <div className={styles.contentCard}>
+            <p className={styles.noCourseAssignmentMessage}>
               No courses are assigned to your account yet.
             </p>
-            <p className={styles.utility_fdc10ac3}>
+            <p className={styles.noCourseAssignmentGuidance}>
               Ask an administrator to assign you to a course section.
             </p>
           </div>
         )}
 
         <button
-          className={styles.utility_7c69777b}
+          className={styles.signOutButton}
           onClick={() => void signOut()}
           type="button"
         >

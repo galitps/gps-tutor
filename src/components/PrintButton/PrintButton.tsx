@@ -34,7 +34,7 @@ export default function PrintButton({
   return (
     <button
       aria-label={`Print ${label}`}
-      className={styles.utility_fbe081c5}
+      className={styles.printButton}
       data-print-hide
       onClick={handlePrint}
       title={`Print ${label}`}

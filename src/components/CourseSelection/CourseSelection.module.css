@@ -1,86 +1,86 @@
 @reference "../../app/globals.css";
 
 /* flex min-h-screen items-center justify-center bg-slate-950 px-5 py-12 text-slate-100 */
-.utility_066ade19 {
+.pageLayout {
   @apply flex min-h-screen items-center justify-center bg-slate-950 px-5 py-12 text-slate-100;
 }
 
 /* w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 p-6 sm:p-10 */
-.utility_2db3d385 {
+.contentPanel {
   @apply w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 p-6 sm:p-10;
 }
 
 /* text-sm font-semibold uppercase tracking-widest text-sky-300 */
-.utility_2c8d53d4 {
+.eyebrowLabel {
   @apply text-sm font-semibold uppercase tracking-widest text-sky-300;
 }
 
 /* mt-3 text-2xl font-semibold */
-.utility_3f306c6a {
+.selectACourseHeading {
   @apply mt-3 text-2xl font-semibold;
 }
 
 /* mt-2 text-sm text-slate-400 */
-.utility_4f37fcfe {
+.helperText {
   @apply mt-2 text-sm text-slate-400;
 }
 
 /* mt-8 text-sm text-slate-300 */
-.utility_834b8477 {
+.bodyText {
   @apply mt-8 text-sm text-slate-300;
 }
 
 /* mt-6 */
-.utility_31f25533 {
+.contentContainer {
   @apply mt-6;
 }
 
 /* rounded-lg bg-red-950/60 p-3 text-sm text-red-200 */
-.utility_d8f13a23 {
+.errorMessage {
   @apply rounded-lg bg-red-950/60 p-3 text-sm text-red-200;
 }
 
 /* mt-4 inline-block text-sm text-sky-300 */
-.utility_4b612a7d {
+.returnToSignInLink {
   @apply mt-4 inline-block text-sm text-sky-300;
 }
 
 /* mt-8 space-y-3 */
-.utility_54a77f7e {
+.itemList {
   @apply mt-8 space-y-3;
 }
 
 /* block rounded-xl border border-slate-700 bg-slate-950/60 p-4 transition hover:border-sky-500 hover:bg-slate-800 */
-.utility_c8bcd5a6 {
+.primaryLink {
   @apply block rounded-xl border border-slate-700 bg-slate-950/60 p-4 transition hover:border-sky-500 hover:bg-slate-800;
 }
 
 /* block font-medium */
-.utility_a27bffaa {
+.caption {
   @apply block font-medium;
 }
 
 /* mt-1 block text-sm text-slate-400 */
-.utility_39229847 {
+.mutedCaption {
   @apply mt-1 block text-sm text-slate-400;
 }
 
 /* mt-8 rounded-xl border border-slate-700 bg-slate-950/60 p-4 */
-.utility_d9a59e1c {
+.contentCard {
   @apply mt-8 rounded-xl border border-slate-700 bg-slate-950/60 p-4;
 }
 
 /* text-sm text-slate-200 */
-.utility_0b5e6ab6 {
+.noCourseAssignmentMessage {
   @apply text-sm text-slate-200;
 }
 
 /* mt-1 text-sm text-slate-400 */
-.utility_fdc10ac3 {
+.noCourseAssignmentGuidance {
   @apply mt-1 text-sm text-slate-400;
 }
 
 /* mt-8 rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 */
-.utility_7c69777b {
+.signOutButton {
   @apply mt-8 rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800;
 }

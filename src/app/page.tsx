@@ -208,52 +208,52 @@ export default function Home() {
   }
 
   return (
-    <main className={styles.utility_6422a31f}>
-      <div className={styles.utility_2c617b0f}>
-        <section className={styles.utility_d86c6318}>
-          <div className={styles.utility_967b9113} />
-          <div className={styles.utility_f99f0003} />
-          <div className={styles.utility_d89972fe}>
-            <div className={styles.utility_d1545d78}>
-              <CompassRose className={styles.utility_e9686695} />
+    <main className={styles.pageLayout}>
+      <div className={styles.contentGrid}>
+        <section className={styles.contentSection}>
+          <div className={styles.heroBackgroundGlow} />
+          <div className={styles.heroBorderAccent} />
+          <div className={styles.contentContainer}>
+            <div className={styles.alignedRow}>
+              <CompassRose className={styles.icon} />
             </div>
-            <p className={styles.utility_a636643b}>
+            <p className={styles.eyebrowLabel}>
               GPS Tutor
             </p>
-            <h1 className={styles.utility_711b2ee1}>
+            <h1 className={styles.weHelpYouReachYourGoalsHeading}>
               We help you reach your goals.
             </h1>
-            <p className={styles.utility_f907aed3}>
+            <p className={styles.bodyText}>
               Sign in to continue your tutoring journey, wherever it takes you.
             </p>
           </div>
         </section>
 
-        <section className={styles.utility_f32924e4}>
-          <div className={styles.utility_339538ae}>
-            <div className={styles.utility_212e5c20}>
-              <div className={styles.utility_78514bb7}>
-                <CompassRose className={styles.utility_74458003} />
+        <section className={styles.signInPanelSection}>
+          <div className={styles.signInPanel}>
+            <div className={styles.brandIdentity}>
+              <div className={styles.flexAlignedRow}>
+                <CompassRose className={styles.brandIcon} />
               </div>
-              <p className={styles.utility_1d0aaaa5}>
+              <p className={styles.brandName}>
                 GPS Tutor
               </p>
             </div>
 
             {signedInAs ? (
-              <div className={styles.utility_a1f611f0}>
-                <div className={styles.utility_ccef449f}>
+              <div className={styles.signedInAccountPanel}>
+                <div className={styles.successAlignedRow}>
                   <LockKeyhole aria-hidden="true" size={25} />
                 </div>
-                <h2 className={styles.utility_57f62819}>
+                <h2 className={styles.youReSignedInHeading}>
                   You&apos;re signed in
                 </h2>
-                <p className={styles.utility_576d475d}>
+                <p className={styles.supportingText}>
                   Your {signedInAs} account has been verified.
                 </p>
-                <p className={styles.utility_f8560c9f}>{email}</p>
+                <p className={styles.helperText}>{email}</p>
                 <Link
-                  className={styles.utility_27ca8034}
+                  className={styles.primaryLink}
                   href={signedInAs === "admin" ? "/admin" : "/courses"}
                 >
                   {signedInAs === "admin"
@@ -261,7 +261,7 @@ export default function Home() {
                     : "Select a course"}
                 </Link>
                 <button
-                  className={styles.utility_3769e728}
+                  className={styles.signOutButton}
                   disabled={isSubmitting}
                   onClick={handleSignOut}
                   type="button"
@@ -271,26 +271,26 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <p className={styles.utility_63473a2c}>
+                <p className={styles.welcomeEyebrow}>
                   WELCOME BACK
                 </p>
-                <h2 className={styles.utility_bf4fe5d1}>
+                <h2 className={styles.signInHeading}>
                   Sign in to your account
                 </h2>
-                <p className={styles.utility_576d475d}>
+                <p className={styles.supportingText}>
                   Choose your account type, then enter your details.
                 </p>
 
                 <div
                   aria-label="Sign-in account type"
-                  className={styles.utility_e1b71ba5}
+                  className={styles.accountTypeOptions}
                   role="group"
                 >
                   {signInRoles.map(({ value, label, Icon }) => (
                     <button
                       key={value}
                       aria-pressed={role === value}
-                      className={[styles.utility_25a69ae7, (role === value ? styles.utility_421b5f48 : styles.utility_653d7b0d), styles.utility_bd85d7d1].filter(Boolean).join(" ")}
+                      className={[styles.accountTypeButton, (role === value ? styles.selectedAccountType : styles.unselectedAccountTypeButton), styles.disabledAccountType].filter(Boolean).join(" ")}
                       onClick={() => setRole(value)}
                       disabled={isSubmitting}
                       type="button"
@@ -302,12 +302,12 @@ export default function Home() {
                 </div>
 
                 <button
-                  className={styles.utility_768e43a0}
+                  className={styles.borderedSecondaryButton}
                   disabled={isSubmitting}
                   onClick={handleGoogleSignIn}
                   type="button"
                 >
-                  <svg aria-hidden="true" className={styles.utility_3a33b9b0} viewBox="0 0 48 48">
+                  <svg aria-hidden="true" className={styles.googleIcon} viewBox="0 0 48 48">
                     <path
                       fill="#EA4335"
                       d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"
@@ -328,25 +328,25 @@ export default function Home() {
                   {isSubmitting ? "Connecting to Google..." : "Continue with Google"}
                 </button>
 
-                <div className={styles.utility_469a2977}>
-                  <span aria-hidden="true" className={styles.utility_5591f064} />
-                  <span className={styles.utility_027d25d0}>
+                <div className={styles.emailSignInDivider}>
+                  <span aria-hidden="true" className={styles.caption} />
+                  <span className={styles.mutedCaption}>
                     or use email
                   </span>
-                  <span aria-hidden="true" className={styles.utility_5591f064} />
+                  <span aria-hidden="true" className={styles.caption} />
                 </div>
 
-                <form className={styles.utility_b43b4c08} onSubmit={handleSubmit}>
+                <form className={styles.formLayout} onSubmit={handleSubmit}>
                   <div>
                     <label
-                      className={styles.utility_07241f8b}
+                      className={styles.fieldLabel}
                       htmlFor="email"
                     >
                       Email address
                     </label>
                     <input
                       autoComplete="email"
-                      className={styles.utility_c014b89b}
+                      className={styles.formControl}
                       id="email"
                       onChange={(event) => setEmail(event.target.value)}
                       placeholder="you@example.com"
@@ -358,14 +358,14 @@ export default function Home() {
                   </div>
                   <div>
                     <label
-                      className={styles.utility_07241f8b}
+                      className={styles.fieldLabel}
                       htmlFor="password"
                     >
                       Password
                     </label>
                     <input
                       autoComplete="current-password"
-                      className={styles.utility_c014b89b}
+                      className={styles.formControl}
                       id="password"
                       onChange={(event) => setPassword(event.target.value)}
                       placeholder="Enter your password"
@@ -379,7 +379,7 @@ export default function Home() {
                   {errorMessage && (
                     <p
                       aria-live="polite"
-                      className={styles.utility_2bb5c4b3}
+                      className={styles.errorMessage}
                       role="alert"
                     >
                       {errorMessage}
@@ -387,7 +387,7 @@ export default function Home() {
                   )}
 
                   <button
-                    className={styles.utility_a4053609}
+                    className={styles.primaryButton}
                     disabled={isSubmitting}
                     type="submit"
                   >
@@ -395,7 +395,7 @@ export default function Home() {
                   </button>
                 </form>
 
-                <p className={styles.utility_2101c22c}>
+                <p className={styles.newAccountGuidance}>
                   New here? Continue with Google to send your administrator an
                   account request.
                 </p>
@@ -405,7 +405,7 @@ export default function Home() {
             {signedInAs && errorMessage && (
               <p
                 aria-live="polite"
-                className={styles.utility_bc230a50}
+                className={styles.dangerErrorMessage}
                 role="alert"
               >
                 {errorMessage}

@@ -41,81 +41,81 @@
 }
 
 /* relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-300 bg-white */
-.utility_cb029dc6 {
+.contentPanel {
   @apply relative flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-300 bg-white;
 }
 
 /* absolute left-2 right-2 top-2 z-10 flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/95 p-2 shadow-sm */
-.utility_a4875056 {
+.drawingToolbar {
   @apply absolute left-2 right-2 top-2 z-10 flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/95 p-2 shadow-sm;
 }
 
 /* flex items-center gap-1 */
-.utility_41681120 {
+.alignedRow {
   @apply flex items-center gap-1;
 }
 
 /* rounded-md p-2 */
-.utility_f7e59ee7 {
+.drawingToolButton {
   @apply rounded-md p-2;
 }
 
 /* bg-sky-100 text-sky-800 */
-.utility_1b73394d {
+.selectedDrawingTool {
   @apply bg-sky-100 text-sky-800;
 }
 
 /* text-slate-600 hover:bg-slate-200 */
-.utility_bc85acf1 {
+.unselectedDrawingTool {
   @apply text-slate-600 hover:bg-slate-200;
 }
 
 /* mx-1 h-6 border-l border-slate-300 */
-.utility_7f8ae50f {
+.toolbarDivider {
   @apply mx-1 h-6 border-l border-slate-300;
 }
 
 /* h-6 w-6 rounded-full border-2 */
-.utility_2400c039 {
+.colorSwatch {
   @apply h-6 w-6 rounded-full border-2;
 }
 
 /* border-sky-600 ring-2 ring-sky-200 */
-.utility_ff6ae561 {
+.selectedColorSwatch {
   @apply border-sky-600 ring-2 ring-sky-200;
 }
 
 /* border-white shadow ring-1 ring-slate-300 */
-.utility_0d6ba20a {
+.unselectedColorSwatch {
   @apply border-white shadow ring-1 ring-slate-300;
 }
 
 /* ml-auto flex items-center gap-1 */
-.utility_eb80f14c {
+.boardActionGroup {
   @apply ml-auto flex items-center gap-1;
 }
 
 /* rounded-md p-2 text-slate-600 hover:bg-slate-200 disabled:opacity-40 */
-.utility_0c49a6eb {
+.toolbarButton {
   @apply rounded-md p-2 text-slate-600 hover:bg-slate-200 disabled:opacity-40;
 }
 
 /* rounded-md p-2 text-slate-600 hover:bg-red-100 hover:text-red-700 disabled:opacity-40 */
-.utility_13087f49 {
+.dangerButton {
   @apply rounded-md p-2 text-slate-600 hover:bg-red-100 hover:text-red-700 disabled:opacity-40;
 }
 
 /* absolute left-2 right-2 top-16 z-10 border border-red-200 bg-red-50/95 px-3 py-1 text-xs text-red-700 */
-.utility_274d850f {
+.errorMessage {
   @apply absolute left-2 right-2 top-16 z-10 border border-red-200 bg-red-50/95 px-3 py-1 text-xs text-red-700;
 }
 
 /* h-full w-full touch-none */
-.utility_765236cd {
+.icon {
   @apply h-full w-full touch-none;
 }
 
 /* pointer-events-none absolute inset-x-0 top-0 bg-white/90 px-3 py-2 text-center text-xs text-slate-500 */
-.utility_6e818e02 {
+.boardLoadingOverlay {
   @apply pointer-events-none absolute inset-x-0 top-0 bg-white/90 px-3 py-2 text-center text-xs text-slate-500;
 }

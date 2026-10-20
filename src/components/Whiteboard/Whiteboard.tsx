@@ -587,20 +587,20 @@ export default function Whiteboard({
 
   return (
     <section
-      className={styles.utility_cb029dc6}
+      className={styles.contentPanel}
       data-printable="whiteboard"
     >
       <div
-        className={styles.utility_a4875056}
+        className={styles.drawingToolbar}
         data-print-hide
       >
-        <div aria-label="Drawing tools" className={styles.utility_41681120}>
+        <div aria-label="Drawing tools" className={styles.alignedRow}>
           {tools.map(({ value, label, Icon }) => (
             <button
               key={value}
               aria-label={label}
               aria-pressed={selectedTool === value}
-              className={[styles.utility_f7e59ee7, (selectedTool === value ? styles.utility_1b73394d : styles.utility_bc85acf1)].filter(Boolean).join(" ")}
+              className={[styles.drawingToolButton, (selectedTool === value ? styles.selectedDrawingTool : styles.unselectedDrawingTool)].filter(Boolean).join(" ")}
               onClick={() => setSelectedTool(value)}
               title={label}
               type="button"
@@ -610,26 +610,26 @@ export default function Whiteboard({
           ))}
         </div>
 
-        <div className={styles.utility_7f8ae50f} />
+        <div className={styles.toolbarDivider} />
 
-        <div aria-label="Drawing colors" className={styles.utility_41681120}>
+        <div aria-label="Drawing colors" className={styles.alignedRow}>
           {colors.map((color) => (
             <button
               key={color}
               aria-label={`Use ${color} drawing color`}
               aria-pressed={selectedColor === color}
-              className={[styles.utility_2400c039, colorStyles[color], (selectedColor === color ? styles.utility_ff6ae561 : styles.utility_0d6ba20a)].filter(Boolean).join(" ")}
+              className={[styles.colorSwatch, colorStyles[color], (selectedColor === color ? styles.selectedColorSwatch : styles.unselectedColorSwatch)].filter(Boolean).join(" ")}
               onClick={() => setSelectedColor(color)}
               type="button"
             />
           ))}
         </div>
 
-        <div className={styles.utility_eb80f14c}>
+        <div className={styles.boardActionGroup}>
           <PrintButton display="whiteboard" label="Whiteboard" />
           <button
             aria-label="Undo last drawing"
-            className={styles.utility_0c49a6eb}
+            className={styles.toolbarButton}
             disabled={!items.length || !isReady}
             onClick={() => void undoLast()}
             title="Undo last drawing"
@@ -639,7 +639,7 @@ export default function Whiteboard({
           </button>
           <button
             aria-label="Clear whiteboard"
-            className={styles.utility_13087f49}
+            className={styles.dangerButton}
             disabled={!items.length || !isReady}
             onClick={() => void clearBoard()}
             title="Clear whiteboard"
@@ -653,7 +653,7 @@ export default function Whiteboard({
       {connectionError && (
         <p
           aria-live="polite"
-          className={styles.utility_274d850f}
+          className={styles.errorMessage}
           role="alert"
           data-print-hide
         >
@@ -665,7 +665,7 @@ export default function Whiteboard({
         <svg
           ref={svgRef}
           aria-label="Shared drawing whiteboard"
-          className={styles.utility_765236cd}
+          className={styles.icon}
           preserveAspectRatio="none"
           role="application"
           viewBox={`0 0 ${boardWidth} ${boardHeight}`}
@@ -680,7 +680,7 @@ export default function Whiteboard({
         {!isReady && (
           <div
             aria-live="polite"
-            className={styles.utility_6e818e02}
+            className={styles.boardLoadingOverlay}
             role="status"
             data-print-hide
           >
